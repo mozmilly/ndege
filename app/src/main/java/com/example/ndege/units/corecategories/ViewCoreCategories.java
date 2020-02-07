@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.ndege.R;
+import com.example.ndege.adverts.interfaces.AdvertInteface;
+import com.example.ndege.adverts.models.Advert;
+import com.example.ndege.adverts.models.AdvertAdapter;
 import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.models.CoreCategory;
 import com.example.ndege.units.corecategories.models.CoreCategoryAdapter;
@@ -25,6 +28,7 @@ import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.subcorecategories.ViewSubCoreCategories;
 import com.example.ndege.utils.ApiUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -32,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked {
+public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked, AdvertAdapter.OnMenuItemClicked {
 
     private static final int REQUEST_CODE = 200;
     RecyclerView recyclerView, menuItemRecycler;
@@ -53,6 +57,11 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         ViewCoreCategories.menuItems = menuItems;
     }
 
+    ShimmerFrameLayout shimmerFrameLayout;
+
+    AdvertInteface advertInteface;
+    AdvertAdapter advertAdapter;
+    List<Advert> advertList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +69,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
         recyclerView = findViewById(R.id.core_cat_recycler);
         menuItemRecycler = findViewById(R.id.core_cat_menu_items_recycler);
+
+        shimmerFrameLayout = findViewById(R.id.core_cat_container);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -72,6 +83,28 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
             }
         }
+
+        advertInteface = ApiUtils.get_advert_service();
+        advertInteface.get_all_adverts().enqueue(new Callback<List<Advert>>() {
+            @Override
+            public void onResponse(Call<List<Advert>> call, Response<List<Advert>> response) {
+                if (response.code()==200){
+                    advertList = response.body();
+                    advertAdapter = new AdvertAdapter(response.body(), ViewCoreCategories.this);
+                    LinearLayoutManager glm = new LinearLayoutManager(ViewCoreCategories.this, RecyclerView.HORIZONTAL, false);
+                    recyclerView.setLayoutManager(glm);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(advertAdapter);
+                    advertAdapter.setOnClick(ViewCoreCategories.this);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Advert>> call, Throwable t) {
+
+            }
+        });
 
         unitInterface = ApiUtils.getUnitService();
         unitInterface.get_all_core_categories().enqueue(new Callback<List<CoreCategory>>() {
@@ -101,6 +134,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                 if (response.code()==200){
                     menuItemsList = response.body();
 
+                    shimmerFrameLayout.stopShimmerAnimation();
+                    shimmerFrameLayout.setVisibility(View.GONE);
 
                     menuItemAdapter = new MenuItemAdapter(menuItemsList, ViewCoreCategories.this);
                     menuItemRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -151,5 +186,23 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             Log.v("TAG","Permission: "+permissions[0]+ "was "+grantResults[0]);
             //resume tasks needing this permission
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
+
+    }
+
+    @Override
+    protected void onPause() {
+        shimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
+    }
+
+    @Override
+    public void onMenuItemClick(int position) {
+
     }
 }

@@ -21,6 +21,7 @@ import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.subcorecategories.models.SubCoreCategory;
 import com.example.ndege.units.subcorecategories.models.SubCoreCategoryAdapter;
 import com.example.ndege.utils.ApiUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
 
     MenuItemAdapter menuItemAdapter;
     List<MenuItems> menuItemsList;
+
+    ShimmerFrameLayout shimmerFrameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +47,8 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
 
         recyclerView = findViewById(R.id.sub_core_category_recycler);
         menuItemRecycler = findViewById(R.id.sub_core_category_menu_items_recycler);
+
+        shimmerFrameLayout = findViewById(R.id.sub_core_cat_container);
 
         unitInterface = ApiUtils.getUnitService();
         unitInterface.get_sub_core_categories(getIntent().getIntExtra("id", 0)).enqueue(new Callback<List<SubCoreCategory>>() {
@@ -74,6 +79,8 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
                 if (response.code()==200){
                     menuItemsList = response.body();
 
+                    shimmerFrameLayout.stopShimmerAnimation();
+                    shimmerFrameLayout.setVisibility(View.GONE);
 
                     menuItemAdapter = new MenuItemAdapter(menuItemsList, ViewSubCoreCategories.this);
                     menuItemRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -107,5 +114,18 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
         intent.putExtra("menu_item", "true");
         ViewCoreCategories.setMenuItems(menuItemsList.get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
+
+    }
+
+    @Override
+    protected void onPause() {
+        shimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
     }
 }

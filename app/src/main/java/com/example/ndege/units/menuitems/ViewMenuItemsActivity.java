@@ -16,6 +16,7 @@ import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.utils.ApiUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -28,12 +29,16 @@ public class ViewMenuItemsActivity extends AppCompatActivity implements MenuItem
     UnitInterface unitInterface;
     RecyclerView recyclerView;
     List<MenuItems> menuItemsList;
+
+    ShimmerFrameLayout shimmerFrameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_menu_items2);
 
         recyclerView = findViewById(R.id.this_menuitems_recycler);
+
+        shimmerFrameLayout = findViewById(R.id.menu_items_container);
 
 
         unitInterface = ApiUtils.getUnitService();
@@ -43,6 +48,8 @@ public class ViewMenuItemsActivity extends AppCompatActivity implements MenuItem
                 if (response.code()==200){
                     menuItemsList = response.body();
 
+                    shimmerFrameLayout.stopShimmerAnimation();
+                    shimmerFrameLayout.setVisibility(View.GONE);
 
                     menuItemAdapter = new MenuItemAdapter(menuItemsList, ViewMenuItemsActivity.this);
                     GridLayoutManager glm = new GridLayoutManager(ViewMenuItemsActivity.this, 2);
@@ -73,5 +80,18 @@ public class ViewMenuItemsActivity extends AppCompatActivity implements MenuItem
         ViewCoreCategories.setMenuItems(menuItemsList.get(position));
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
+
+    }
+
+    @Override
+    protected void onPause() {
+        shimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
     }
 }
