@@ -1,6 +1,7 @@
 package com.example.ndege.utils;
 
 
+import com.example.ndege.adverts.interfaces.AdvertInteface;
 import com.example.ndege.login.interfaces.LoginInterface;
 import com.example.ndege.login.interfaces.SignUpInterface;
 import com.example.ndege.units.interfaces.CheckOutInterface;
@@ -45,5 +46,10 @@ public class ApiUtils {
     public static OrderInterface getOrderService(){
         return RetrofitClient.getClient(BASE_URL).create(OrderInterface.class);
     }
+
+    public static AdvertInteface get_advert_service(){
+        return RetrofitClient.getClient(BASE_URL).create(AdvertInteface.class);
+    }
+
 
 }

@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.ndege.R;
+import com.example.ndege.adverts.interfaces.AdvertInteface;
+import com.example.ndege.adverts.models.Advert;
+import com.example.ndege.adverts.models.AdvertAdapter;
 import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.models.CoreCategory;
 import com.example.ndege.units.corecategories.models.CoreCategoryAdapter;
@@ -33,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked {
+public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked, AdvertAdapter.OnMenuItemClicked {
 
     private static final int REQUEST_CODE = 200;
     RecyclerView recyclerView, menuItemRecycler;
@@ -56,6 +59,9 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
     ShimmerFrameLayout shimmerFrameLayout;
 
+    AdvertInteface advertInteface;
+    AdvertAdapter advertAdapter;
+    List<Advert> advertList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +83,28 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
             }
         }
+
+        advertInteface = ApiUtils.get_advert_service();
+        advertInteface.get_all_adverts().enqueue(new Callback<List<Advert>>() {
+            @Override
+            public void onResponse(Call<List<Advert>> call, Response<List<Advert>> response) {
+                if (response.code()==200){
+                    advertList = response.body();
+                    advertAdapter = new AdvertAdapter(response.body(), ViewCoreCategories.this);
+                    LinearLayoutManager glm = new LinearLayoutManager(ViewCoreCategories.this, RecyclerView.HORIZONTAL, false);
+                    recyclerView.setLayoutManager(glm);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(advertAdapter);
+                    advertAdapter.setOnClick(ViewCoreCategories.this);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Advert>> call, Throwable t) {
+
+            }
+        });
 
         unitInterface = ApiUtils.getUnitService();
         unitInterface.get_all_core_categories().enqueue(new Callback<List<CoreCategory>>() {
@@ -171,5 +199,10 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
     protected void onPause() {
         shimmerFrameLayout.stopShimmerAnimation();
         super.onPause();
+    }
+
+    @Override
+    public void onMenuItemClick(int position) {
+
     }
 }
