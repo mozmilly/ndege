@@ -21,6 +21,7 @@ import com.example.ndege.units.menuitems.ViewMenuItemsActivity;
 import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.utils.ApiUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
     MenuItemAdapter menuItemAdapter;
     List<MenuItems> menuItemsList;
 
+    ShimmerFrameLayout shimmerFrameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,8 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
 
         recyclerView = findViewById(R.id.menu_cat_recycler);
         menuItemRecycler = findViewById(R.id.menu_cat_menu_items_recycler);
+
+        shimmerFrameLayout = findViewById(R.id.menu_cat_container);
 
 
         unitInterface = ApiUtils.getUnitService();
@@ -79,6 +83,9 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
                 if (response.code()==200){
                     menuItemsList = response.body();
 
+
+                    shimmerFrameLayout.stopShimmerAnimation();
+                    shimmerFrameLayout.setVisibility(View.GONE);
 
                     menuItemAdapter = new MenuItemAdapter(menuItemsList, ViewMenuCategories.this);
                     menuItemRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -123,5 +130,18 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
         ViewCoreCategories.setMenuItems(menuItemsList.get(position));
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
+
+    }
+
+    @Override
+    protected void onPause() {
+        shimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
     }
 }

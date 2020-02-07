@@ -25,6 +25,7 @@ import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.subcorecategories.ViewSubCoreCategories;
 import com.example.ndege.utils.ApiUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -53,6 +54,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         ViewCoreCategories.menuItems = menuItems;
     }
 
+    ShimmerFrameLayout shimmerFrameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
         recyclerView = findViewById(R.id.core_cat_recycler);
         menuItemRecycler = findViewById(R.id.core_cat_menu_items_recycler);
+
+        shimmerFrameLayout = findViewById(R.id.core_cat_container);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -101,6 +106,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                 if (response.code()==200){
                     menuItemsList = response.body();
 
+                    shimmerFrameLayout.stopShimmerAnimation();
+                    shimmerFrameLayout.setVisibility(View.GONE);
 
                     menuItemAdapter = new MenuItemAdapter(menuItemsList, ViewCoreCategories.this);
                     menuItemRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -151,5 +158,18 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             Log.v("TAG","Permission: "+permissions[0]+ "was "+grantResults[0]);
             //resume tasks needing this permission
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
+
+    }
+
+    @Override
+    protected void onPause() {
+        shimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
     }
 }
