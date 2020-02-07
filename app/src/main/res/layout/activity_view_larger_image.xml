@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/container"
+    tools:context=".units.ViewLargerImageActivity">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:id="@+id/expanded_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:elevation="10dp"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:id="@+id/my_large_image"
+                        android:visibility="gone"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:orientation="vertical"
+                        android:id="@+id/viewPagerParent"
+                        >
+                        <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/viewPagerMI"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:layout_marginBottom="8dp"/>
+                        <LinearLayout
+                            android:id="@+id/SliderDotsMI"
+                            android:layout_below="@+id/viewPagerMI"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/large_image_name"
+                        android:textSize="15sp"
+                        android:text="Choma Moto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:textSize="20sp"
+                        android:id="@+id/large_image_price"
+                        android:text="Ksh600-Ksh900"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:textSize="17sp"
+                        android:text="Order Amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:text="Min Order: 5Pieces"
+                        android:id="@+id/large_image_no_of_pieces"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"/>
+
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:textSize="17sp"
+                        android:text="Description:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:id="@+id/large_image_description"
+                        android:text="Ultra 4K HD #4096*2160pixel# Android 9.0 tv box H96 MAX RK3318 android tv box 4gb ram 32gb rom OTT tv box quad core "
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <!--                <TextView-->
+                    <!--                    android:layout_marginTop="10dp"-->
+                    <!--                    android:textSize="17sp"-->
+                    <!--                    android:text="Colors:"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"/>-->
+
+                    <!--                <TextView-->
+                    <!--                    android:layout_marginTop="5dp"-->
+                    <!--                    android:textSize="15sp"-->
+                    <!--                    android:textStyle="bold"-->
+                    <!--                    android:text="Green, Blue, Yellow"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"/>-->
+
+                    <!--                <TextView-->
+                    <!--                    android:layout_marginTop="10dp"-->
+                    <!--                    android:textSize="17sp"-->
+                    <!--                    android:text="Sizes:"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"/>-->
+
+                    <!--                <TextView-->
+                    <!--                    android:layout_marginTop="5dp"-->
+                    <!--                    android:textSize="15sp"-->
+                    <!--                    android:textStyle="bold"-->
+                    <!--                    android:text="42, 32, 50"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"/>-->
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:textSize="17sp"
+                        android:text="Stock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        />
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:id="@+id/large_image_available"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/extra_fields_recycler"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <Button
+                        android:layout_marginTop="20dp"
+                        android:background="@color/colorPrimary"
+                        android:text="Buy"
+                        android:textSize="20sp"
+                        android:id="@+id/large_image_add_to_cart"
+                        android:textColor="@color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+                    <LinearLayout
+
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <Button
+                                android:scaleType="fitCenter"
+                                android:layout_gravity="center_vertical"
+                                android:background="@color/colorPrimary"
+                                android:textColor="@color/white"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/my_inquiry_btn"
+                                android:text="Send Inquiry"
+                                />
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/share_whatsapp_btn"
+                                android:text="Whatsapp"
+                                />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+                            <Button
+                                android:id="@+id/large_image_checkout"
+                                android:layout_width="131dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:background="@color/red_500"
+                                android:scaleType="fitCenter"
+                                android:text="Checkout"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</FrameLayout>

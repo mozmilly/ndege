@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "418073293689",
+    "firebase_url": "https://ndege-4bd4f.firebaseio.com",
+    "project_id": "ndege-4bd4f",
+    "storage_bucket": "ndege-4bd4f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418073293689:android:d745c706b342708bacb5a8",
+        "android_client_info": {
+          "package_name": "com.bomba.ndege"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418073293689-jntduspa37u0os4bd269gf2fm2t1t20s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bomba.ndege",
+            "certificate_hash": "0509b9ae4c46644a4e2d27333c131a2ae7d061df"
+          }
+        },
+        {
+          "client_id": "418073293689-sg4eeq0em65gat8dv4lafks057a4tvkd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz2XS8Cf7c1ocEsC6GEj96jMyqTZswTEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418073293689-sg4eeq0em65gat8dv4lafks057a4tvkd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
