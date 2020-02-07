@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#ddd"
     tools:context=".units.ViewAllDiscounted">
 
     <View
@@ -17,12 +18,13 @@
         android:layout_marginLeft="10dp"
         >
         <TextView
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Top Deals"
             android:fontFamily="@font/semibold"
             android:textColor="@color/colorPrimary"
-            android:textSize="30dp"
+            android:textSize="20dp"
 
             />
     </LinearLayout>
@@ -30,7 +32,7 @@
     <LinearLayout
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.recyclerview.widget.RecyclerView

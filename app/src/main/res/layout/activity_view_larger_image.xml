@@ -184,7 +184,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:weightSum="3">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -196,8 +196,7 @@
 
 
                             <Button
-                                android:scaleType="fitCenter"
-                                android:layout_gravity="center_vertical"
+                                android:padding="10dp"
                                 android:background="@color/colorPrimary"
                                 android:textColor="@color/white"
                                 android:layout_width="wrap_content"
@@ -205,17 +204,24 @@
                                 android:id="@+id/my_inquiry_btn"
                                 android:text="Send Inquiry"
                                 />
+                        </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:layout_weight="1"
+                            >
                             <Button
-                                android:layout_width="wrap_content"
+
+                                android:background="@color/green_500"
+                                android:textColor="@color/white"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/share_whatsapp_btn"
                                 android:text="Whatsapp"
                                 />
-
-
                         </LinearLayout>
-
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -230,15 +236,14 @@
                                 android:id="@+id/large_image_checkout"
                                 android:layout_width="131dp"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="10dp"
-                                android:background="@color/red_500"
-                                android:scaleType="fitCenter"
+                                android:background="@color/grey_800"
                                 android:text="Checkout"
                                 android:textColor="@color/white" />
                         </LinearLayout>
 
                     </LinearLayout>
+
 
                 </LinearLayout>
 
