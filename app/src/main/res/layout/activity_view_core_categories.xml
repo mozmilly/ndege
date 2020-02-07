@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     tools:context=".units.corecategories.ViewCoreCategories">
+
+
     <LinearLayout
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -13,20 +15,56 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content">
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/advert_recycler_view"
-            />
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/core_cat_recycler"
-            />
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:padding="6dp"
+                android:background="@drawable/boarded_circle"
+                android:hint="Search products or supplies"
+                android:fontFamily="@font/bold"
+                android:textSize="12dp"
+                android:layout_width="210dp"
+                android:layout_height="50dp"
+                android:id="@+id/my_search1"
+                />
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/mine_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/search" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp">
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_item_recycler"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/advert_recycler_view"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/core_cat_recycler"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="vertical">
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/core_cat_container"

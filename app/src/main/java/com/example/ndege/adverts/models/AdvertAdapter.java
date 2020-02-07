@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,7 +26,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.MyViewHold
     private OnMenuItemClicked onClick;
 
     public interface OnMenuItemClicked {
-        void onMenuItemClick(int position);
+        void onAdvertItemClick(int position);
     }
 
     public AdvertAdapter(List<Advert> advertList, Context context) {
@@ -52,7 +51,7 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.MyViewHold
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClick.onMenuItemClick(position);
+                onClick.onAdvertItemClick(position);
             }
         });
 

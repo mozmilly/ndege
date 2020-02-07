@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.ndege.R;
+import com.example.ndege.adverts.MessageActivity;
 import com.example.ndege.adverts.interfaces.AdvertInteface;
 import com.example.ndege.adverts.models.Advert;
 import com.example.ndege.adverts.models.AdvertAdapter;
@@ -26,20 +31,22 @@ import com.example.ndege.units.corecategories.models.CoreCategoryAdapter;
 import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
+import com.example.ndege.units.models.MySearchAdapter;
 import com.example.ndege.units.subcorecategories.ViewSubCoreCategories;
 import com.example.ndege.utils.ApiUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked, AdvertAdapter.OnMenuItemClicked {
+public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked, AdvertAdapter.OnMenuItemClicked, MySearchAdapter.OnSearchItemClicked {
 
     private static final int REQUEST_CODE = 200;
-    RecyclerView recyclerView, menuItemRecycler;
+    RecyclerView recyclerView, menuItemRecycler, mySearch;
     UnitInterface unitInterface;
     CoreCategoryAdapter coreCategoryAdapter;
     MenuItemAdapter menuItemAdapter;
@@ -62,6 +69,21 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
     AdvertInteface advertInteface;
     AdvertAdapter advertAdapter;
     List<Advert> advertList;
+
+    private static Advert advert;
+
+    public static Advert getAdvert() {
+        return advert;
+    }
+
+    public static void setAdvert(Advert advert) {
+        ViewCoreCategories.advert = advert;
+    }
+
+    EditText search;
+
+    MySearchAdapter mySearchAdapter;
+    List<MenuItems> menuItemSearchList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +91,71 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
         recyclerView = findViewById(R.id.core_cat_recycler);
         menuItemRecycler = findViewById(R.id.core_cat_menu_items_recycler);
+
+        search = findViewById(R.id.my_search1);
+        mySearch = findViewById(R.id.search_item_recycler);
+
+
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (search.getText().toString().length()==0){
+                    menuItemSearchList.clear();
+
+                    if (menuItemAdapter!=null){
+                        menuItemAdapter.notifyDataSetChanged();
+                    }
+
+
+                }
+            }
+        });
+
+        TextView mine_search = findViewById(R.id.mine_search);
+
+        mine_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UnitInterface unitInterface = ApiUtils.getUnitService();
+
+                unitInterface.get_all_menuitems(search.getText().toString()).enqueue(new Callback<List<MenuItems>>() {
+                    @Override
+                    public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
+                        if (response.code()==200){
+                            menuItemSearchList = response.body();
+
+                            mySearchAdapter = new MySearchAdapter(menuItemSearchList, ViewCoreCategories.this);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                            mySearch.setLayoutManager(mLayoutManager);
+                            mySearch.setItemAnimator(new DefaultItemAnimator());
+                            mySearch.setAdapter(mySearchAdapter);
+                            mySearchAdapter.setOnClick(ViewCoreCategories.this);
+//                            close.setVisibility(View.VISIBLE);
+
+//                            Toast.makeText(DashBoardActivity.this, "Gotten", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<MenuItems>> call, Throwable throwable) {
+
+                    }
+                });
+            }
+        });
+
 
         shimmerFrameLayout = findViewById(R.id.core_cat_container);
 
@@ -202,7 +289,19 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
     }
 
     @Override
-    public void onMenuItemClick(int position) {
+    public void onAdvertItemClick(int position) {
+        Intent intent = new Intent(ViewCoreCategories.this, MessageActivity.class);
+        setAdvert(advertList.get(position));
+        startActivity(intent);
 
+    }
+
+    @Override
+    public void onSearchItemClick(int position) {
+        Intent intent = new Intent(ViewCoreCategories.this, ViewLargerImageActivity.class);
+        ViewCoreCategories.setMenuItems(menuItemSearchList.get(position));
+        intent.putExtra("menu_item", "true");
+        intent.putExtra("image", menuItemSearchList.get(position).getImage());
+        startActivity(intent);
     }
 }

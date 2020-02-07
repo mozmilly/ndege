@@ -39,6 +39,7 @@
         <activity android:name=".units.subcorecategories.ViewSubCoreCategories" />
         <activity android:name=".units.maincategories.ViewMainCategories" />
         <activity android:name=".units.orders.CheckOutSuccess" />
+        <activity android:name=".adverts.MessageActivity" />
     </application>
 
 </manifest>
