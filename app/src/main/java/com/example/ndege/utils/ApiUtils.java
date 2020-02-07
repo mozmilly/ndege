@@ -7,6 +7,7 @@ import com.example.ndege.units.interfaces.CheckOutInterface;
 import com.example.ndege.units.interfaces.FeeInterface;
 import com.example.ndege.units.interfaces.InquiryInterface;
 import com.example.ndege.units.interfaces.MentionInterface;
+import com.example.ndege.units.interfaces.OrderInterface;
 import com.example.ndege.units.interfaces.UnitInterface;
 
 public class ApiUtils {
@@ -39,6 +40,10 @@ public class ApiUtils {
 
     public static CheckOutInterface getCheckOutService(){
         return RetrofitClient.getClient(BASE_URL).create(CheckOutInterface.class);
+    }
+
+    public static OrderInterface getOrderService(){
+        return RetrofitClient.getClient(BASE_URL).create(OrderInterface.class);
     }
 
 }

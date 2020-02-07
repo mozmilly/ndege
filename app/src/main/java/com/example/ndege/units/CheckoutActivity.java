@@ -39,6 +39,7 @@ import com.example.ndege.units.models.LocationName;
 import com.example.ndege.units.models.LocationPrice;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MyCart;
+import com.example.ndege.units.orders.CheckOutSuccess;
 import com.example.ndege.utils.ApiUtils;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -486,7 +487,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                 if (response.code()==200){
                     SharedPreferences settings = getSharedPreferences("Cart", 0);
                     settings.edit().clear().apply();
-                    Intent intent = new Intent(CheckoutActivity.this, ViewCoreCategories.class);
+                    Intent intent = new Intent(CheckoutActivity.this, CheckOutSuccess.class);
                     startActivity(intent);
 
                     SharedPreferences sp = getSharedPreferences("pref", 0);

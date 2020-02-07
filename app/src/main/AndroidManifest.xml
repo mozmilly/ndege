@@ -13,9 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".units.ClientDetailsActivity"></activity>
+        <activity android:name=".units.orders.ViewOrderDetailsActivity"></activity>
+        <activity android:name=".units.orders.ViewMyOrdersActivity" />
+        <activity android:name=".units.ClientDetailsActivity" />
         <activity android:name=".units.CheckoutActivity" />
-        <activity android:name=".landing">
+        <activity android:name=".units.orders.CheckOutSuccess">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +38,7 @@
         <activity android:name=".units.ViewLargerImageActivity" />
         <activity android:name=".units.subcorecategories.ViewSubCoreCategories" />
         <activity android:name=".units.maincategories.ViewMainCategories" />
+<!--        <activity android:name=".units.orders.CheckOutSuccess" />-->
     </application>
 
 </manifest>
