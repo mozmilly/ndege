@@ -71,7 +71,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
         public ImageView image;
         RelativeLayout parent;
         LinearLayout parent_image;
-        Button whatsapp;
+        Button whatsapp, general;
 
         public MyViewHolder(View view) {
             super(view);
@@ -87,6 +87,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
             parent_image = view.findViewById(R.id.image_parent);
             whatsapp = view.findViewById(R.id.share_portfolio);
             min_order = view.findViewById(R.id.min_order);
+            general = view.findViewById(R.id.general_share);
             image.setDrawingCacheEnabled(true);
         }
 
@@ -118,7 +119,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             holder.name.setText(menuItemsList.get(position).getItem_name());
-            holder.price.setText(String.valueOf("Ksh."+menuItemsList.get(position).getPrice()));
+            holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+200)));
             holder.min_order.setText(("Atleast "+menuItemsList.get(position).getMinimum_order()+" items"));
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,6 +163,32 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                     } catch (android.content.ActivityNotFoundException ex) {
 
                     }
+
+                }
+            });
+
+            holder.general.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Drawable drawable = holder.image.getDrawable();
+                    BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
+                    Bitmap bitmap = bitmapDrawable .getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+                    String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+
+                    Uri imgUri = Uri.parse(path);
+                    Intent general = new Intent(Intent.ACTION_SEND);
+                    general.setType("text/plain");
+                    general.putExtra(Intent.EXTRA_TEXT, menuItemsList.get(position).getItem_name()+"\n"+menuItemsList.get(position).getDescription());
+                    general.putExtra(Intent.EXTRA_STREAM, imgUri);
+                    general.setType("image/jpeg");
+                    general.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    Intent shareIntent = Intent.createChooser(general, null);
+                    context.startActivity(shareIntent);
+
+
 
                 }
             });

@@ -3,6 +3,7 @@ package com.example.ndege.units.menucategories;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -48,6 +49,10 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
         menuItemRecycler = findViewById(R.id.menu_cat_menu_items_recycler);
 
         shimmerFrameLayout = findViewById(R.id.menu_cat_container);
+
+        TextView label = findViewById(R.id.main_cat_name);
+
+        label.setText(getIntent().getStringExtra("main_cat_name"));
 
 
         unitInterface = ApiUtils.getUnitService();
@@ -113,6 +118,7 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
     public void onCategoryItemClick(int position) {
         Intent intent = new Intent(ViewMenuCategories.this, ViewMenuItemsActivity.class);
         intent.putExtra("id", menuCategoryList.get(position).getId());
+        intent.putExtra("menu_cat_name", menuCategoryList.get(position).getCat_name());
         startActivity(intent);
     }
 

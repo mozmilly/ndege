@@ -57,7 +57,7 @@ public class OrderMenuItemAdapter extends RecyclerView.Adapter<OrderMenuItemAdap
 
 
         holder.name.setText(menuItemsList.get(position).getItem_name());
-        holder.price.setText(String.valueOf("Ksh."+menuItemsList.get(position).getPrice()));
+        holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+200)));
         holder.description.setText(menuItemsList.get(position).getDescription());
     }
 

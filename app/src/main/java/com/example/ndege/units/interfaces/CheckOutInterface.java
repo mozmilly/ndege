@@ -21,6 +21,7 @@ public interface CheckOutInterface {
             @Field("description") String description,
             @Field("client_name") String client_name,
             @Field("client_phone") String client_phone,
-            @Field("margin") int margin
+            @Field("margin") int margin,
+            @Field("app_id") String app_id
     );
 }

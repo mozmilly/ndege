@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -52,6 +53,11 @@ public class ViewMainCategories extends AppCompatActivity implements MainCategor
         menuItemRecycler = findViewById(R.id.main_cat_menu_items_recycler);
 
         shimmerFrameLayout = findViewById(R.id.main_cat_container);
+
+
+        TextView label = findViewById(R.id.sub_core_cat_name);
+
+        label.setText(getIntent().getStringExtra("sub_core_cat_name"));
 
         SharedPreferences sharedPreferences = getSharedPreferences("Scope", 0);
         int unit_id = sharedPreferences.getInt("unit_id", 0);
@@ -111,6 +117,7 @@ public class ViewMainCategories extends AppCompatActivity implements MainCategor
     public void onCategoryItemClick(int position) {
         Intent intent = new Intent(ViewMainCategories.this, ViewMenuCategories.class);
         intent.putExtra("id", mainCategoryList.get(position).getId());
+        intent.putExtra("main_cat_name", mainCategoryList.get(position).getCategory_name());
         startActivity(intent);
     }
 

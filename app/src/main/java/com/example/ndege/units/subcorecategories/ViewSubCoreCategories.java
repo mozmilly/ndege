@@ -3,6 +3,7 @@ package com.example.ndege.units.subcorecategories;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -49,6 +50,10 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
         menuItemRecycler = findViewById(R.id.sub_core_category_menu_items_recycler);
 
         shimmerFrameLayout = findViewById(R.id.sub_core_cat_container);
+
+        TextView label = findViewById(R.id.core_cat_name);
+
+        label.setText(getIntent().getStringExtra("core_cat_name"));
 
         unitInterface = ApiUtils.getUnitService();
         unitInterface.get_sub_core_categories(getIntent().getIntExtra("id", 0)).enqueue(new Callback<List<SubCoreCategory>>() {
@@ -104,6 +109,7 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
     public void onCategoryItemClick(int position) {
         Intent intent = new Intent(ViewSubCoreCategories.this, ViewMainCategories.class);
         intent.putExtra("id", subCoreCategoryList.get(position).getId());
+        intent.putExtra("sub_core_cat_name", subCoreCategoryList.get(position).getCategory_name());
         startActivity(intent);
     }
 

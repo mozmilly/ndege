@@ -324,7 +324,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
 
             name.setText(("Product Name: "+menuItems.getItem_name()));
             description.setText(menuItems.getDescription());
-            price.setText(("Price: Ksh."+menuItems.getPrice()));
+            price.setText(("Price: Ksh."+(menuItems.getPrice()+200)));
             no_of_pieces.setText(("Min Order: "+menuItems.getMinimum_order()));
             available.setText(("Available: "+menuItems.getItems_in_stock()));
 

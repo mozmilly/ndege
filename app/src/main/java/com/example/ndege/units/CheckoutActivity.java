@@ -384,7 +384,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
             double price = 0;
             for (MyCart myCart : arrayList) {
-                price = myCart.getQuantity() * myCart.getMenuItems().getPrice();
+                price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+200);
                 total_fee += price;
             }
 
@@ -480,7 +480,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         checkOutInterface.make_order(myCart, username, total_price, name, latitude, longitude,
                 desc, getIntent().getStringExtra("client_name"),
                 getIntent().getStringExtra("client_phone"),
-                Integer.parseInt(getIntent().getStringExtra("margin"))).enqueue(new Callback<MenuItems>() {
+                Integer.parseInt(getIntent().getStringExtra("margin")), "ndege").enqueue(new Callback<MenuItems>() {
             @Override
             public void onResponse(Call<MenuItems> call, Response<MenuItems> response) {
                 Toast.makeText(CheckoutActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();

@@ -46,7 +46,7 @@ import retrofit2.Response;
 public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked, AdvertAdapter.OnMenuItemClicked, MySearchAdapter.OnSearchItemClicked {
 
     private static final int REQUEST_CODE = 200;
-    RecyclerView recyclerView, menuItemRecycler, mySearch;
+    RecyclerView recyclerView, menuItemRecycler, mySearch, advertRecycler;
     UnitInterface unitInterface;
     CoreCategoryAdapter coreCategoryAdapter;
     MenuItemAdapter menuItemAdapter;
@@ -94,6 +94,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
         search = findViewById(R.id.my_search1);
         mySearch = findViewById(R.id.search_item_recycler);
+
+        advertRecycler = findViewById(R.id.advert_recycler_view);
 
 
 
@@ -179,11 +181,10 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     advertList = response.body();
                     advertAdapter = new AdvertAdapter(response.body(), ViewCoreCategories.this);
                     LinearLayoutManager glm = new LinearLayoutManager(ViewCoreCategories.this, RecyclerView.HORIZONTAL, false);
-                    recyclerView.setLayoutManager(glm);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(advertAdapter);
+                    advertRecycler.setLayoutManager(glm);
+                    advertRecycler.setItemAnimator(new DefaultItemAnimator());
+                    advertRecycler.setAdapter(advertAdapter);
                     advertAdapter.setOnClick(ViewCoreCategories.this);
-                    recyclerView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -205,7 +206,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(coreCategoryAdapter);
                     coreCategoryAdapter.setOnClick(ViewCoreCategories.this);
-                    recyclerView.setVisibility(View.VISIBLE);
                 }
             }
             @Override
@@ -231,7 +231,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     menuItemRecycler.setAdapter(menuItemAdapter);
                     menuItemAdapter.setOnClick(ViewCoreCategories.this);
                     menuItemAdapter.notifyDataSetChanged();
-                    menuItemRecycler.setVisibility(View.VISIBLE);
 
                 }
             }
@@ -253,6 +252,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
         Intent intent = new Intent(ViewCoreCategories.this, ViewSubCoreCategories.class);
         intent.putExtra("id", coreCategoryList.get(position).getId());
+        intent.putExtra("core_cat_name", coreCategoryList.get(position).getCategory_name());
         startActivity(intent);
 
     }
