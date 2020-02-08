@@ -606,4 +606,10 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(CheckoutActivity.this, ViewCoreCategories.class);
+        startActivity(intent);
+    }
 }

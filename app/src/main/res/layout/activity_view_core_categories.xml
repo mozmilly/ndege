@@ -37,6 +37,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:drawableLeft="@drawable/search" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/view_orders"
+                    android:text="Orders"
+                    />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

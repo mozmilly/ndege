@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MySearchAdapter;
+import com.example.ndege.units.orders.CheckOutSuccess;
 import com.example.ndege.units.subcorecategories.ViewSubCoreCategories;
 import com.example.ndege.utils.ApiUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -96,6 +98,16 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         mySearch = findViewById(R.id.search_item_recycler);
 
         advertRecycler = findViewById(R.id.advert_recycler_view);
+
+
+        Button orders = findViewById(R.id.view_orders);
+        orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewCoreCategories.this, CheckOutSuccess.class);
+                startActivity(intent);
+            }
+        });
 
 
 
