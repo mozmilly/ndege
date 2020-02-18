@@ -73,6 +73,7 @@
                 android:id="@+id/core_cat_menu_items_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 />
             <LinearLayout
