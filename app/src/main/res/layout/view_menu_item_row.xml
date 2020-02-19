@@ -60,7 +60,7 @@
                         android:layout_width="250sp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:maxLength="20"
+                        android:maxLength="12"
                         android:textColor="@color/title"
                         android:textSize="12dp"
                         android:textStyle="" />

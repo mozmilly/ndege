@@ -212,6 +212,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     advertRecycler.setItemAnimator(new DefaultItemAnimator());
                     advertRecycler.setAdapter(advertAdapter);
                     advertAdapter.setOnClick(ViewCoreCategories.this);
+
                 }
             }
 

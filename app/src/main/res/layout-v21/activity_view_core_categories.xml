@@ -38,10 +38,12 @@
                     android:layout_marginLeft="10dp"
                     android:drawableLeft="@drawable/search" />
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/orders"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:id="@+id/view_orders"
-                    android:text="Orders"
+                    android:text=""
                     />
             </LinearLayout>
 
@@ -61,6 +63,7 @@
                 android:id="@+id/advert_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
