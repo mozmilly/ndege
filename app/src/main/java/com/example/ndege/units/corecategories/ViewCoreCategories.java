@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
@@ -259,12 +260,15 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     menuItemAdapter.setOnClick(ViewCoreCategories.this);
                     menuItemAdapter.notifyDataSetChanged();
                     menuItemRecycler.setHasFixedSize(true);
-                    menuItemRecycler.addOnScrollListener(new PaginationListener(staggeredGridLayoutManager) {
+                    menuItemRecycler.addOnScrollListener(new PaginationListener(staggeredGridLayoutManager, recyclerView, advertRecycler) {
+
                         @Override
                         protected void loadMoreItems() {
                             isLoading = true;
                             currentPage++;
                             doApiCall();
+
+
 
                         }
 

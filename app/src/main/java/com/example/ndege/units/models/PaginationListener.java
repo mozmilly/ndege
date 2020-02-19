@@ -1,5 +1,6 @@
 package com.example.ndege.units.models;
 
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -14,10 +15,20 @@ public abstract class PaginationListener  extends RecyclerView.OnScrollListener 
     @NonNull
     private StaggeredGridLayoutManager layoutManager;
 
+    private RecyclerView coreRecyclerView;
+
+    private RecyclerView advertRecyclerView;
+
     private static final int PAGE_SIZE = 10;
 
     public PaginationListener(@NonNull StaggeredGridLayoutManager layoutManager){
         this.layoutManager = layoutManager;
+    }
+
+    public PaginationListener(@NonNull StaggeredGridLayoutManager layoutManager, RecyclerView coreRecyclerView, RecyclerView advertRecyclerView) {
+        this.layoutManager = layoutManager;
+        this.coreRecyclerView = coreRecyclerView;
+        this.advertRecyclerView = advertRecyclerView;
     }
 
     @Override
@@ -31,6 +42,19 @@ public abstract class PaginationListener  extends RecyclerView.OnScrollListener 
         int[] into = new int[mSpanCount];
 
         int firstVisibleItem = layoutManager.findFirstVisibleItemPositions(into)[0];
+
+        if (coreRecyclerView!=null&&advertRecyclerView!=null){
+//            coreRecyclerView.setVisibility(View.GONE);
+//            advertRecyclerView.setVisibility(View.GONE);
+            if (firstVisibleItem!=0){
+                coreRecyclerView.setVisibility(View.GONE);
+                advertRecyclerView.setVisibility(View.GONE);
+            } else {
+                coreRecyclerView.setVisibility(View.VISIBLE);
+                advertRecyclerView.setVisibility(View.VISIBLE);
+            }
+
+        }
 
         if (!isLoading() && !isLastPage()){
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
