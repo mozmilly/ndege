@@ -120,7 +120,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             holder.name.setText(menuItemsList.get(position).getItem_name());
-            holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+200)));
+            holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+100)));
             holder.min_order.setText(("Atleast "+menuItemsList.get(position).getMinimum_order()+" items"));
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override

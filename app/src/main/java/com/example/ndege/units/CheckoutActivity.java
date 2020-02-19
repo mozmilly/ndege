@@ -384,7 +384,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
             double price = 0;
             for (MyCart myCart : arrayList) {
-                price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+200);
+                price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+100);
                 total_fee += price;
             }
 
