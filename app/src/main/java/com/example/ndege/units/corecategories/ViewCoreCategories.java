@@ -5,21 +5,26 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ndege.R;
 import com.example.ndege.adverts.MessageActivity;
@@ -33,6 +38,7 @@ import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MySearchAdapter;
+import com.example.ndege.units.models.PaginationListener;
 import com.example.ndege.units.orders.CheckOutSuccess;
 import com.example.ndege.units.subcorecategories.ViewSubCoreCategories;
 import com.example.ndege.utils.ApiUtils;
@@ -44,6 +50,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.ndege.units.models.PaginationListener.PAGE_START;
 
 public class ViewCoreCategories extends AppCompatActivity implements CoreCategoryAdapter.OnItemClicked, MenuItemAdapter.OnItemClicked, AdvertAdapter.OnMenuItemClicked, MySearchAdapter.OnSearchItemClicked {
 
@@ -86,6 +94,13 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
     MySearchAdapter mySearchAdapter;
     List<MenuItems> menuItemSearchList = new ArrayList<>();
+
+
+    private int currentPage = PAGE_START;
+    private boolean isLastPage = false;
+    private int totalPage = 10;
+    private boolean isLoading = false;
+    int itemCount = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,7 +242,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         });
 
 
-        unitInterface.get_all_menu_items().enqueue(new Callback<List<MenuItems>>() {
+        unitInterface.get_all_menu_items(currentPage).enqueue(new Callback<List<MenuItems>>() {
             @Override
             public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
                 if (response.code()==200){
@@ -237,12 +252,36 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     shimmerFrameLayout.setVisibility(View.GONE);
 
                     menuItemAdapter = new MenuItemAdapter(menuItemsList, ViewCoreCategories.this);
-                    menuItemRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-                    menuItemRecycler.setNestedScrollingEnabled(false);
+                    StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                    menuItemRecycler.setLayoutManager(staggeredGridLayoutManager);
                     menuItemRecycler.setItemAnimator(new DefaultItemAnimator());
+                    menuItemRecycler.setNestedScrollingEnabled(false);
                     menuItemRecycler.setAdapter(menuItemAdapter);
                     menuItemAdapter.setOnClick(ViewCoreCategories.this);
                     menuItemAdapter.notifyDataSetChanged();
+                    menuItemRecycler.setHasFixedSize(true);
+                    menuItemRecycler.addOnScrollListener(new PaginationListener(staggeredGridLayoutManager, recyclerView, advertRecycler) {
+
+                        @Override
+                        protected void loadMoreItems() {
+                            isLoading = true;
+                            currentPage++;
+                            doApiCall();
+
+
+
+                        }
+
+                        @Override
+                        public boolean isLastPage() {
+                            return isLastPage;
+                        }
+
+                        @Override
+                        public boolean isLoading() {
+                            return isLoading;
+                        }
+                    });
 
                 }
             }
@@ -315,5 +354,48 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         intent.putExtra("menu_item", "true");
         intent.putExtra("image", menuItemSearchList.get(position).getImage());
         startActivity(intent);
+    }
+
+    private void doApiCall() {
+        final List<MenuItems> items = new ArrayList<>();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ProgressBar progressBar = findViewById(R.id.this_progress_bar);
+                progressBar.setVisibility(View.VISIBLE);
+                unitInterface = ApiUtils.getUnitService();
+                unitInterface.get_all_menu_items(currentPage).enqueue(new Callback<List<MenuItems>>() {
+                    @Override
+                    public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
+                        if (response.code()==200){
+                            items.addAll(response.body());
+
+                            /**
+                             * manage progress view
+                             */
+                            if (currentPage != PAGE_START) menuItemAdapter.removeLoading();
+                            menuItemAdapter.addItems(items);
+
+                            // check weather is last page or not
+                            if (response.body().size()==30){
+                                menuItemAdapter.addLoading();
+                            } else {
+                                isLastPage = true;
+                            }
+                            isLoading = false;
+                            progressBar.setVisibility(View.GONE);
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<MenuItems>> call, Throwable t) {
+
+                    }
+                });
+
+
+            }
+        }, 1500);
     }
 }

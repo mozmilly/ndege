@@ -46,6 +46,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
     String variableString = "";
     Boolean header = false;
 
+    private boolean isLoaderVisible = false;
     //declare interface
     private OnItemClicked onClick;
 
@@ -218,5 +219,33 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
         menuItemsList = list;
         notifyDataSetChanged();
     }
+
+
+    public void addItems(List<MenuItems> postItems) {
+        menuItemsList.addAll(postItems);
+        notifyDataSetChanged();
+    }
+    public void addLoading() {
+        isLoaderVisible = true;
+
+    }
+    public void removeLoading() {
+        isLoaderVisible = false;
+        int position = menuItemsList.size() - 1;
+        MenuItems item = getItem(position);
+        if (item != null) {
+            menuItemsList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+    public void clear() {
+        menuItemsList.clear();
+        notifyDataSetChanged();
+    }
+
+    MenuItems getItem(int position) {
+        return menuItemsList.get(position);
+    }
+
 
 }

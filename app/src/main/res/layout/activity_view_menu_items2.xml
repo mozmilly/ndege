@@ -80,4 +80,11 @@
             android:id="@+id/this_menuitems_recycler"
             />
     </LinearLayout>
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/this_progress_bar"
+        android:layout_alignParentBottom="true"
+        />
 </RelativeLayout>

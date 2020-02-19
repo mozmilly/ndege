@@ -103,29 +103,36 @@ public interface UnitInterface {
     @FormUrlEncoded
     @POST("units/get_menu_items_api_view/")
     Call<List<MenuItems>> get_menu_items_api_view(
-            @Field("id") int id
+            @Field("id") int id,
+            @Field("page") int page
     );
 
 
-    @GET("units/get_all_menu_items_view/")
-    Call<List<MenuItems>> get_all_menu_items();
+    @FormUrlEncoded
+    @POST("units/get_all_menu_items_view/")
+    Call<List<MenuItems>> get_all_menu_items(
+            @Field("page") int page
+    );
 
     @FormUrlEncoded
     @POST("units/get_core_cat_menu_items/")
     Call<List<MenuItems>> get_core_cat_menu_items(
-            @Field("id") int id
+            @Field("id") int id,
+            @Field("page") int page
     );
 
     @FormUrlEncoded
     @POST("units/get_sub_core_cat_menu_items/")
     Call<List<MenuItems>> get_sub_core_cat_menu_items(
-            @Field("id") int id
+            @Field("id") int id,
+            @Field("page") int page
     );
 
 
     @FormUrlEncoded
     @POST("units/get_main_cat_menu_items/")
     Call<List<MenuItems>> get_main_cat_menu_items(
-            @Field("id") int id
+            @Field("id") int id,
+            @Field("page") int page
     );
 }
