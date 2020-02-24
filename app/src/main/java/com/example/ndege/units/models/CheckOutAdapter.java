@@ -91,13 +91,13 @@ public class CheckOutAdapter extends RecyclerView.Adapter<CheckOutAdapter.MyView
             holder.name.setText(menuList.get(position).getMenuItems().getItem_name());
             holder.name.setAllCaps(true);
             holder.quantity.setText(String.valueOf(menuList.get(position).getQuantity()));
-            holder.price.setText(String.valueOf(menuList.get(position).getQuantity()*(menuList.get(position).getMenuItems().getPrice()+200)));
+            holder.price.setText(String.valueOf(menuList.get(position).getQuantity()*(menuList.get(position).getMenuItems().getPrice()+100)));
             holder.quantity.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View view, int i, KeyEvent keyEvent) {
                     try {
                         int q = Integer.parseInt(holder.quantity.getText().toString());
-                        holder.price.setText(String.valueOf(q * (menuList.get(position).getMenuItems().getPrice()+200)));
+                        holder.price.setText(String.valueOf(q * (menuList.get(position).getMenuItems().getPrice()+100)));
                     } catch (Exception ex){
                         Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                     }
