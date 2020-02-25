@@ -50,6 +50,9 @@ import com.example.ndege.units.models.ImagePagerAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MyCart;
 import com.example.ndege.units.models.PortfolioImage;
+import com.example.ndege.units.product_reviews.interfaces.ProductReviewInterface;
+import com.example.ndege.units.product_reviews.models.ProductReview;
+import com.example.ndege.units.product_reviews.models.ProductReviewAdapter;
 import com.example.ndege.utils.ApiUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -91,7 +94,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
 
 
 
-    TextView name, description, price, no_of_pieces, available;
+    TextView name, description, price, no_of_pieces, available, noComments;
     Button addToCart, sendInquiry, whatsapp;
     SharedPreferences sharedPreferences;
     Gson gson = new Gson();
@@ -131,7 +134,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
     // very frequently.
     private int mShortAnimationDuration;
 
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, mine_recycler;
     ExtraFieldsAdapter extraFieldsAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +142,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_view_larger_image);
 
         recyclerView = findViewById(R.id.extra_fields_recycler);
+        mine_recycler = findViewById(R.id.product_reviews);
 
         parent = findViewById(R.id.viewPagerParent);
 
@@ -157,7 +161,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         available = findViewById(R.id.large_image_available);
         available.setVisibility(View.GONE);
         ImageView imageView = findViewById(R.id.my_large_image);
-
+        noComments = findViewById(R.id.no_comments_alert);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,6 +199,31 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         MenuItems menuItems = ViewCoreCategories.getMenuItems();
 
         UnitInterface unitInterface = ApiUtils.getUnitService();
+
+        ProductReviewInterface productReviewInterface = ApiUtils.get_product_review_service();
+
+        productReviewInterface.get_all_product_reviews(menuItems.getId()).enqueue(new Callback<List<ProductReview>>() {
+            @Override
+            public void onResponse(Call<List<ProductReview>> call, Response<List<ProductReview>> response) {
+                if (response.code()==200){
+                    ProductReviewAdapter productReviewAdapter = new ProductReviewAdapter(response.body(), ViewLargerImageActivity.this);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    mine_recycler.setLayoutManager(mLayoutManager);
+                    mine_recycler.setItemAnimator(new DefaultItemAnimator());
+                    mine_recycler.setAdapter(productReviewAdapter);
+                    noComments.setVisibility(View.GONE);
+                    if (response.body().isEmpty()){
+                        noComments.setVisibility(View.VISIBLE);
+                        noComments.setText("No Comments");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductReview>> call, Throwable t) {
+
+            }
+        });
 
 
         whatsapp.setOnClickListener(new View.OnClickListener() {

@@ -188,9 +188,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                     general.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     Intent shareIntent = Intent.createChooser(general, null);
                     context.startActivity(shareIntent);
-
-
-
                 }
             });
 
