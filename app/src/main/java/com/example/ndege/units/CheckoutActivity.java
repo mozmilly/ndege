@@ -34,6 +34,7 @@ import com.example.ndege.units.interfaces.CheckOutInterface;
 import com.example.ndege.units.interfaces.FeeInterface;
 import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.CheckOutAdapter;
+import com.example.ndege.units.models.ExtraPrice;
 import com.example.ndege.units.models.Fee;
 import com.example.ndege.units.models.LocationName;
 import com.example.ndege.units.models.LocationPrice;
@@ -107,6 +108,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
     double margin = 0;
     Spinner locationSpinner;
+    double ndege_extra = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +125,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
 
         UnitInterface unitInterface = ApiUtils.getUnitService();
+
 
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -381,15 +384,35 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         } else {
             arrayList = gson.fromJson(json, type);
 
+            unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+                @Override
+                public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                    if (response.code()==200){
+                        for (ExtraPrice extraPrice: response.body()){
+                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                ndege_extra = extraPrice.getAmount();
 
-            double price = 0;
-            for (MyCart myCart : arrayList) {
-                price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+100);
-                total_fee += price;
-            }
+                                double price = 0;
+                                for (MyCart myCart : arrayList) {
+                                    price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+ndege_extra);
+                                    total_fee += price;
+                                }
 
-            TextView tv = findViewById(R.id.check_out_items_fee);
-            tv.setText(String.valueOf("Ksh."+total_fee+transport_fee));
+                                TextView tv = findViewById(R.id.check_out_items_fee);
+                                tv.setText(String.valueOf("Ksh."+total_fee+margin));
+
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
+
+                }
+            });
+
+
             SharedPreferences sp = getSharedPreferences("pref", 0);
             String username = sp.getString("user", "no user");
 

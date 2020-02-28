@@ -29,6 +29,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,11 +47,13 @@ import com.example.ndege.units.corecategories.ViewCoreCategories;
 import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.ExtraField;
 import com.example.ndege.units.models.ExtraFieldsAdapter;
+import com.example.ndege.units.models.ExtraPrice;
 import com.example.ndege.units.models.ImagePagerAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MyCart;
 import com.example.ndege.units.models.PortfolioImage;
 import com.example.ndege.units.product_reviews.interfaces.ProductReviewInterface;
+import com.example.ndege.units.product_reviews.models.ProductRating;
 import com.example.ndege.units.product_reviews.models.ProductReview;
 import com.example.ndege.units.product_reviews.models.ProductReviewAdapter;
 import com.example.ndege.utils.ApiUtils;
@@ -136,6 +139,8 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
 
     RecyclerView recyclerView, mine_recycler;
     ExtraFieldsAdapter extraFieldsAdapter;
+    RatingBar ratingBar;
+    TextView rating;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +150,9 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         mine_recycler = findViewById(R.id.product_reviews);
 
         parent = findViewById(R.id.viewPagerParent);
+
+        ratingBar = findViewById(R.id.my_rating_bar);
+        rating = findViewById(R.id.my_rating);
 
 
         viewPager =  findViewById(R.id.viewPagerMI);
@@ -191,6 +199,9 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
             }
         });
 
+
+
+
         // Retrieve and cache the system's default "short" animation time.
         mShortAnimationDuration = getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
@@ -201,6 +212,23 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         UnitInterface unitInterface = ApiUtils.getUnitService();
 
         ProductReviewInterface productReviewInterface = ApiUtils.get_product_review_service();
+
+        productReviewInterface.get_product_rating(menuItems.getId()).enqueue(new Callback<ProductRating>() {
+            @Override
+            public void onResponse(Call<ProductRating> call, Response<ProductRating> response) {
+                if (response.code()==200){
+                    Toast.makeText(ViewLargerImageActivity.this, String.valueOf(response.body()), Toast.LENGTH_SHORT).show();
+                    ratingBar.setRating(response.body().getPoints__avg());
+                    rating.setText(String.valueOf(response.body().getPoints__avg()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductRating> call, Throwable t) {
+
+            }
+        });
+
 
         productReviewInterface.get_all_product_reviews(menuItems.getId()).enqueue(new Callback<List<ProductReview>>() {
             @Override
@@ -353,7 +381,25 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
 
             name.setText(("Product Name: "+menuItems.getItem_name()));
             description.setText(menuItems.getDescription());
-            price.setText(("Price: Ksh."+(menuItems.getPrice()+100)));
+            unitInterface = ApiUtils.getUnitService();
+            unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+                @Override
+                public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                    if (response.code()==200){
+                        for (ExtraPrice extraPrice: response.body()){
+                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                price.setText(String.valueOf("Ksh."+(menuItems.getPrice()+extraPrice.getAmount())));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
+
+                }
+            });
+
             no_of_pieces.setText(("Min Order: "+menuItems.getMinimum_order()));
             available.setText(("Available: "+menuItems.getItems_in_stock()));
 

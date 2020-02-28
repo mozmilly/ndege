@@ -1,5 +1,6 @@
 package com.example.ndege.units.product_reviews.interfaces;
 
+import com.example.ndege.units.product_reviews.models.ProductRating;
 import com.example.ndege.units.product_reviews.models.ProductReview;
 
 import java.util.List;
@@ -22,6 +23,13 @@ public interface ProductReviewInterface {
     Call<Void> comment_on_product(
             @Field("username") String username,
             @Field("comment") String comment,
+            @Field("menu_item_id") int menu_item_id,
+            @Field("points") double points
+    );
+
+    @FormUrlEncoded
+    @POST("units/get_product_rating/")
+    Call<ProductRating> get_product_rating(
             @Field("menu_item_id") int menu_item_id
     );
 }

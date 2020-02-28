@@ -7,6 +7,15 @@ public class ProductReview implements Serializable {
 	private String date;
 	private User user;
 	private String media;
+	private double points;
+
+	public double getPoints() {
+		return points;
+	}
+
+	public void setPoints(double points) {
+		this.points = points;
+	}
 
 	public void setComment(String comment){
 		this.comment = comment;

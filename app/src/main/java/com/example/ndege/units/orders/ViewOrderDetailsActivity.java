@@ -132,10 +132,12 @@ public class ViewOrderDetailsActivity extends AppCompatActivity implements Order
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(ViewOrderDetailsActivity.this, CommentOnProduct.class);
-        intent.putExtra("product_id", menuItemsList.get(position).getId());
-        intent.putExtra("image", menuItemsList.get(position).getImage());
-        ViewCoreCategories.setMenuItems(menuItemsList.get(position));
-        startActivity(intent);
+        if (myOrder.getStatus().equalsIgnoreCase("Delivered")){
+            Intent intent = new Intent(ViewOrderDetailsActivity.this, CommentOnProduct.class);
+            intent.putExtra("product_id", menuItemsList.get(position).getId());
+            intent.putExtra("image", menuItemsList.get(position).getImage());
+            ViewCoreCategories.setMenuItems(menuItemsList.get(position));
+            startActivity(intent);
+        }
     }
 }

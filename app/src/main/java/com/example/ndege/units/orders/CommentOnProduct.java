@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.example.ndege.R;
 import com.example.ndege.units.ViewLargerImageActivity;
@@ -21,6 +23,7 @@ import retrofit2.Response;
 public class CommentOnProduct extends AppCompatActivity {
     EditText comment;
     Button commentBtn;
+    RatingBar ratingbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,7 @@ public class CommentOnProduct extends AppCompatActivity {
 
         comment = findViewById(R.id.your_comment);
         commentBtn = findViewById(R.id.comment);
+        ratingbar= findViewById(R.id.ratingBar);
         int product_id = getIntent().getIntExtra("product_id", 0);
         SharedPreferences sp = getSharedPreferences("pref", 0);
         String username = sp.getString("user", "no user");
@@ -37,7 +41,8 @@ public class CommentOnProduct extends AppCompatActivity {
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                productReviewInterface.comment_on_product(username, comment.getText().toString(), product_id).enqueue(new Callback<Void>() {
+                Toast.makeText(CommentOnProduct.this, String.valueOf(ratingbar.getRating()), Toast.LENGTH_SHORT).show();
+                productReviewInterface.comment_on_product(username, comment.getText().toString(), product_id, ratingbar.getRating()).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.code()==200){

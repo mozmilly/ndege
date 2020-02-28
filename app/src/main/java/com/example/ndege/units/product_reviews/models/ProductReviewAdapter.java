@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,7 +48,8 @@ public class ProductReviewAdapter extends  RecyclerView.Adapter<ProductReviewAda
 
         holder.name.setText((productReviewList.get(position).getUser().getFirst_name()));
         holder.comment.setText((productReviewList.get(position).getComment()));
-
+        holder.rating.setText(String.valueOf(productReviewList.get(position).getPoints()));
+        holder.ratingBar.setRating(Float.parseFloat(String.valueOf(productReviewList.get(position).getPoints())));
 
     }
 
@@ -57,8 +59,8 @@ public class ProductReviewAdapter extends  RecyclerView.Adapter<ProductReviewAda
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView name, comment;
-
+        public TextView name, comment, rating;
+        RatingBar ratingBar;
         LinearLayout parent;
 
         public MyViewHolder(View view) {
@@ -66,6 +68,9 @@ public class ProductReviewAdapter extends  RecyclerView.Adapter<ProductReviewAda
             view.setClickable(true);
             name = view.findViewById(R.id.product_review_user_name);
             comment = view.findViewById(R.id.product_review_comment);
+            rating = view.findViewById(R.id.rating_id);
+            ratingBar = view.findViewById(R.id.ratingBarDisplay);
+
         }
     }
 
