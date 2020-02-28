@@ -17,7 +17,7 @@ public abstract class PaginationListener  extends RecyclerView.OnScrollListener 
 
     private RecyclerView coreRecyclerView;
 
-    private RecyclerView advertRecyclerView;
+    private LinearLayout advertRecyclerView;
 
     private static final int PAGE_SIZE = 10;
 
@@ -25,7 +25,7 @@ public abstract class PaginationListener  extends RecyclerView.OnScrollListener 
         this.layoutManager = layoutManager;
     }
 
-    public PaginationListener(@NonNull StaggeredGridLayoutManager layoutManager, RecyclerView coreRecyclerView, RecyclerView advertRecyclerView) {
+    public PaginationListener(@NonNull StaggeredGridLayoutManager layoutManager, RecyclerView coreRecyclerView, LinearLayout advertRecyclerView) {
         this.layoutManager = layoutManager;
         this.coreRecyclerView = coreRecyclerView;
         this.advertRecyclerView = advertRecyclerView;
