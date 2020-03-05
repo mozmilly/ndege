@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".units.orders.CommentOnProduct"></activity>
+        <activity android:name=".help.ViewHelpDetails"></activity>
+        <activity android:name=".help.HelpActivity" />
+        <activity android:name=".units.orders.CommentOnProduct" />
         <activity android:name=".units.enquiry.EnquireItemActivity" />
         <activity android:name=".units.orders.ViewOrderDetailsActivity" />
         <activity android:name=".units.orders.ViewMyOrdersActivity" />
@@ -42,6 +44,22 @@
         <activity android:name=".units.maincategories.ViewMainCategories" />
         <activity android:name=".units.orders.CheckOutSuccess" />
         <activity android:name=".adverts.MessageActivity" />
+
+        <service
+            android:name=".firebase_push.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".firebase_push.CallBroadcastReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

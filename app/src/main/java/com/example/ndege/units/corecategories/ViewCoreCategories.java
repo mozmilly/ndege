@@ -2,6 +2,7 @@ package com.example.ndege.units.corecategories;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ import com.example.ndege.adverts.MessageActivity;
 import com.example.ndege.adverts.interfaces.AdvertInteface;
 import com.example.ndege.adverts.models.Advert;
 import com.example.ndege.adverts.models.AdvertAdapter;
+import com.example.ndege.help.HelpActivity;
+import com.example.ndege.tokens.interfaces.TokenInterface;
+import com.example.ndege.tokens.models.TokenModel;
 import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.models.CoreCategory;
 import com.example.ndege.units.corecategories.models.CoreCategoryAdapter;
@@ -49,6 +53,10 @@ import com.example.ndege.units.orders.CheckOutSuccess;
 import com.example.ndege.units.subcorecategories.ViewSubCoreCategories;
 import com.example.ndege.utils.ApiUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.nio.file.attribute.PosixFileAttributes;
 import java.util.ArrayList;
@@ -85,7 +93,15 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
     AdvertInteface advertInteface;
     AdvertAdapter advertAdapter;
-    List<Advert> advertList;
+    private static List<Advert> advertList;
+
+    public static List<Advert> getAdvertList() {
+        return advertList;
+    }
+
+    public static void setAdvertList(List<Advert> advertList) {
+        ViewCoreCategories.advertList = advertList;
+    }
 
     private static Advert advert;
 
@@ -116,6 +132,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
     private int dotscount;
     private ImageView[] dots;
     LinearLayout parent;
+
+    Button help;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +150,55 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         viewPager =  findViewById(R.id.viewPagerCC);
         sliderDotspanel = findViewById(R.id.SliderDotsCC);
         parent = findViewById(R.id.viewPagerParentCC);
+
+        help = findViewById(R.id.floating_action_button);
+
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewCoreCategories.this, HelpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+//                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            Toast.makeText(ViewCoreCategories.this, "Failed", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        TokenInterface tokenInterface = ApiUtils.getTokenService();
+                        SharedPreferences sp = getSharedPreferences("pref", 0);
+                        String username = sp.getString("user", "no user");
+                        tokenInterface.store_token(username, token, "Ndege").enqueue(new Callback<TokenModel>() {
+                            @Override
+                            public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
+                                if (response.code()==200){
+                                    Toast.makeText(ViewCoreCategories.this, "Success", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<TokenModel> call, Throwable t) {
+
+                            }
+                        });
+
+                        // Log and toast
+//                        String msg = getString(R.string.msg_token_fmt, token);
+//                        Log.d(TAG, msg);
+//                        Toast.makeText(DashBoardActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
 
         Button orders = findViewById(R.id.view_orders);
@@ -212,7 +279,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Log.v("TAG","Permission is granted");
                 //File write logic here
-
             } else {
                 Toast.makeText(this, "Allow permission to be able to share images", Toast.LENGTH_SHORT).show();
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
@@ -268,9 +334,11 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                         @Override
                         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+
                         }
 
                         @Override
+
                         public void onPageSelected(int position) {
 
                             for(int i = 0; i< dotscount; i++){
@@ -290,7 +358,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             }
 
             @Override
-            public void onFailure(Call<List<Advert>> call, Throwable t) {
+            public void onFailure(Call<List<Advert>> call, Throwable t)
+            {
 
             }
         });

@@ -3,6 +3,7 @@ package com.example.ndege.units.models;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.ndege.R;
+import com.example.ndege.adverts.MessageActivity;
 import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.ViewCoreCategories;
 import com.squareup.picasso.Picasso;
@@ -57,33 +59,14 @@ public class ImagePagerAdapter extends PagerAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog builder = new Dialog(context, android.R.style.Theme_Light);
-                builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                builder.getWindow().setBackgroundDrawable(
-                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        //nothing;
-                    }
-                });
-
-                ImageView imageView = new ImageView(context);
 
                 try{
-
-                    imageView.setOnTouchListener((ViewLargerImageActivity)context);
-                } catch (ClassCastException ex){
+                    ViewCoreCategories.setAdvert(ViewCoreCategories.getAdvertList().get(position));
+                    Intent intent = new Intent(context, MessageActivity.class);
+                    context.startActivity(intent);
+                } catch (Exception ex){
 
                 }
-
-                Glide.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+images.get(position).getImage())
-                        .into(imageView);
-                builder.addContentView(imageView, new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT));
-                builder.show();
             }
         });
 
