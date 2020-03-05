@@ -5,12 +5,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ndege.R;
+import com.example.ndege.units.corecategories.ViewCoreCategories;
 import com.example.ndege.units.interfaces.OrderInterface;
 import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.MenuItemAdapter;
@@ -109,8 +112,6 @@ public class ViewOrderDetailsActivity extends AppCompatActivity implements Order
                 if (response.code()==200){
                     menuItemsList = response.body();
 
-
-
                     orderMenuItemAdapter = new OrderMenuItemAdapter(menuItemsList, ViewOrderDetailsActivity.this);
                     recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -131,6 +132,12 @@ public class ViewOrderDetailsActivity extends AppCompatActivity implements Order
 
     @Override
     public void onItemClick(int position) {
-
+        if (myOrder.getStatus().equalsIgnoreCase("Delivered")){
+            Intent intent = new Intent(ViewOrderDetailsActivity.this, CommentOnProduct.class);
+            intent.putExtra("product_id", menuItemsList.get(position).getId());
+            intent.putExtra("image", menuItemsList.get(position).getImage());
+            ViewCoreCategories.setMenuItems(menuItemsList.get(position));
+            startActivity(intent);
+        }
     }
 }

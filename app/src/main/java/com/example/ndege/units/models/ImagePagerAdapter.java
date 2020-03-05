@@ -18,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.example.ndege.R;
 import com.example.ndege.units.ViewLargerImageActivity;
+import com.example.ndege.units.corecategories.ViewCoreCategories;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -69,7 +70,12 @@ public class ImagePagerAdapter extends PagerAdapter {
 
                 ImageView imageView = new ImageView(context);
 
-                imageView.setOnTouchListener((ViewLargerImageActivity)context);
+                try{
+
+                    imageView.setOnTouchListener((ViewLargerImageActivity)context);
+                } catch (ClassCastException ex){
+
+                }
 
                 Glide.with(context)
                         .load("https://bombaservices.pythonanywhere.com"+images.get(position).getImage())

@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,12 +21,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.ndege.R;
 import com.example.ndege.adverts.MessageActivity;
@@ -35,15 +39,18 @@ import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.models.CoreCategory;
 import com.example.ndege.units.corecategories.models.CoreCategoryAdapter;
 import com.example.ndege.units.interfaces.UnitInterface;
+import com.example.ndege.units.models.ImagePagerAdapter;
 import com.example.ndege.units.models.MenuItemAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MySearchAdapter;
 import com.example.ndege.units.models.PaginationListener;
+import com.example.ndege.units.models.PortfolioImage;
 import com.example.ndege.units.orders.CheckOutSuccess;
 import com.example.ndege.units.subcorecategories.ViewSubCoreCategories;
 import com.example.ndege.utils.ApiUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.nio.file.attribute.PosixFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,6 +108,14 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
     private int totalPage = 10;
     private boolean isLoading = false;
     int itemCount = 0;
+
+
+    ViewPager viewPager;
+
+    LinearLayout sliderDotspanel;
+    private int dotscount;
+    private ImageView[] dots;
+    LinearLayout parent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +128,10 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         mySearch = findViewById(R.id.search_item_recycler);
 
         advertRecycler = findViewById(R.id.advert_recycler_view);
+
+        viewPager =  findViewById(R.id.viewPagerCC);
+        sliderDotspanel = findViewById(R.id.SliderDotsCC);
+        parent = findViewById(R.id.viewPagerParentCC);
 
 
         Button orders = findViewById(R.id.view_orders);
@@ -213,6 +232,60 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     advertRecycler.setAdapter(advertAdapter);
                     advertAdapter.setOnClick(ViewCoreCategories.this);
 
+                    List<PortfolioImage> portfolioImages = new ArrayList<>();
+
+                    for (Advert advert: response.body()){
+                        portfolioImages.add(new PortfolioImage(advert.getMy_image()));
+                    }
+
+
+                    ImagePagerAdapter viewPagerAdapter = new ImagePagerAdapter(ViewCoreCategories.this, portfolioImages);
+                    autoSlider(viewPager);
+                    viewPager.setAdapter(viewPagerAdapter);
+                    dotscount = viewPagerAdapter.getCount();
+                    dots = new ImageView[dotscount];
+
+                    for(int i = 0; i < dotscount; i++){
+
+                        dots[i] = new ImageView(ViewCoreCategories.this);
+                        dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.non_active_dot));
+
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        params.setMargins(8, 0, 8, 0);
+
+                        sliderDotspanel.addView(dots[i], params);
+
+                    }
+                    try{
+                        dots[0].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.active_dot));
+                    } catch (Exception ex){
+
+                    }
+
+
+                    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+
+                            for(int i = 0; i< dotscount; i++){
+                                dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.non_active_dot));
+                            }
+
+                            dots[position].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.active_dot));
+
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+
+                        }
+                    });
                 }
             }
 
@@ -261,7 +334,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     menuItemAdapter.setOnClick(ViewCoreCategories.this);
                     menuItemAdapter.notifyDataSetChanged();
                     menuItemRecycler.setHasFixedSize(true);
-                    menuItemRecycler.addOnScrollListener(new PaginationListener(staggeredGridLayoutManager, recyclerView, advertRecycler) {
+                    menuItemRecycler.addOnScrollListener(new PaginationListener(staggeredGridLayoutManager, recyclerView, parent) {
 
                         @Override
                         protected void loadMoreItems() {
@@ -398,5 +471,19 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
 
             }
         }, 1500);
+    }
+    public void autoSlider(final ViewPager viewPager) {
+
+        Runnable mUpdateResults = new Runnable() {
+            public void run() {
+                int page = viewPager.getCurrentItem();
+                int numPages = viewPager.getAdapter().getCount();
+                page = (page + 1) % numPages;
+                viewPager.setCurrentItem(page);
+
+            }
+        };
+
+        new Handler().postDelayed(mUpdateResults, 10);
     }
 }

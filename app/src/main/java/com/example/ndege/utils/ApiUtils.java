@@ -10,6 +10,7 @@ import com.example.ndege.units.interfaces.InquiryInterface;
 import com.example.ndege.units.interfaces.MentionInterface;
 import com.example.ndege.units.interfaces.OrderInterface;
 import com.example.ndege.units.interfaces.UnitInterface;
+import com.example.ndege.units.product_reviews.interfaces.ProductReviewInterface;
 
 public class ApiUtils {
     private ApiUtils() {}
@@ -51,5 +52,8 @@ public class ApiUtils {
         return RetrofitClient.getClient(BASE_URL).create(AdvertInteface.class);
     }
 
+    public static ProductReviewInterface get_product_review_service(){
+        return RetrofitClient.getClient(BASE_URL).create(ProductReviewInterface.class);
+    }
 
 }

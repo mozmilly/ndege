@@ -63,6 +63,24 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <RatingBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:max="5"
+                            android:layout_alignParentRight="true"
+                            style="@style/RatingBar"
+                            android:id="@+id/my_rating_bar"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/my_rating"
+                            />
+                    </LinearLayout>
 
 
                     <TextView
@@ -169,6 +187,23 @@
                         android:id="@+id/extra_fields_recycler"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Comments"
+                        android:textSize="20dp"
+                        android:id="@+id/comments_title"
+                        />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/product_reviews"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/no_comments_alert"
+                        />
                     <Button
                         android:layout_marginTop="20dp"
                         android:background="@color/colorPrimary"

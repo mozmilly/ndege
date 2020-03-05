@@ -4,6 +4,7 @@ import com.example.ndege.units.corecategories.models.CoreCategory;
 import com.example.ndege.units.maincategories.models.MainCategory;
 import com.example.ndege.units.menucategories.models.MenuCategory;
 import com.example.ndege.units.models.ExtraField;
+import com.example.ndege.units.models.ExtraPrice;
 import com.example.ndege.units.models.LocationName;
 import com.example.ndege.units.models.LocationPrice;
 import com.example.ndege.units.models.MenuItems;
@@ -135,4 +136,8 @@ public interface UnitInterface {
             @Field("id") int id,
             @Field("page") int page
     );
+
+
+    @GET("units/get_extra_prices/")
+    Call<List<ExtraPrice>> get_extra_price();
 }

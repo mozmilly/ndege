@@ -57,8 +57,15 @@ public class OrderMenuItemAdapter extends RecyclerView.Adapter<OrderMenuItemAdap
 
 
         holder.name.setText(menuItemsList.get(position).getItem_name());
-        holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+200)));
+        holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+100)));
         holder.description.setText(menuItemsList.get(position).getDescription());
+
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onItemClick(position);
+            }
+        });
     }
 
     @Override
@@ -83,7 +90,7 @@ public class OrderMenuItemAdapter extends RecyclerView.Adapter<OrderMenuItemAdap
             description = view.findViewById(R.id.order_menu_item_description);
             price = view.findViewById(R.id.order_menu_item_price);
             image = view.findViewById(R.id.order_menu_item_image);
-            parent = view.findViewById(R.id.menu_item_parent);
+            parent = view.findViewById(R.id.order_menu_item_parent);
             image.setDrawingCacheEnabled(true);
         }
 

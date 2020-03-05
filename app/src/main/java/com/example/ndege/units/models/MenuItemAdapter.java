@@ -25,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.example.ndege.R;
 import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.ViewCoreCategories;
+import com.example.ndege.units.interfaces.UnitInterface;
+import com.example.ndege.utils.ApiUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +38,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.http.Url;
 
 public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyViewHolder> {
@@ -120,7 +125,24 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             holder.name.setText(menuItemsList.get(position).getItem_name());
-            holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+100)));
+            UnitInterface unitInterface = ApiUtils.getUnitService();
+            unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+                @Override
+                public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                    if (response.code()==200){
+                        for (ExtraPrice extraPrice: response.body()){
+                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
+
+                }
+            });
             holder.min_order.setText(("Atleast "+menuItemsList.get(position).getMinimum_order()+" items"));
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,9 +210,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                     general.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     Intent shareIntent = Intent.createChooser(general, null);
                     context.startActivity(shareIntent);
-
-
-
                 }
             });
 
