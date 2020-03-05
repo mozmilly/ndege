@@ -2,8 +2,10 @@ package com.example.ndege.utils;
 
 
 import com.example.ndege.adverts.interfaces.AdvertInteface;
+import com.example.ndege.help.interfaces.HelpInterface;
 import com.example.ndege.login.interfaces.LoginInterface;
 import com.example.ndege.login.interfaces.SignUpInterface;
+import com.example.ndege.tokens.interfaces.TokenInterface;
 import com.example.ndege.units.interfaces.CheckOutInterface;
 import com.example.ndege.units.interfaces.FeeInterface;
 import com.example.ndege.units.interfaces.InquiryInterface;
@@ -56,4 +58,11 @@ public class ApiUtils {
         return RetrofitClient.getClient(BASE_URL).create(ProductReviewInterface.class);
     }
 
+    public static TokenInterface getTokenService(){
+        return RetrofitClient.getClient(BASE_URL).create(TokenInterface.class);
+    }
+
+    public static HelpInterface getHelpService(){
+        return RetrofitClient.getClient(BASE_URL).create(HelpInterface.class);
+    }
 }

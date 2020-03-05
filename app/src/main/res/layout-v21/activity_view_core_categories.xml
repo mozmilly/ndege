@@ -6,139 +6,170 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
+
     android:focusableInTouchMode="true"
     tools:context=".units.corecategories.ViewCoreCategories">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Ndege"
+                android:textColor="@color/colorPrimary"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/my_search1"
+                android:layout_width="180dp"
+                android:layout_height="50dp"
+                android:background="@drawable/boarded_circle"
+                android:fontFamily="@font/bold"
+                android:hint="Search products or supplies"
+                android:padding="6dp"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/mine_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/search" />
+
+            <Button
+                android:id="@+id/view_orders"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/colorPrimary"
+                android:text="Orders"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_item_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <LinearLayout
+            android:id="@+id/viewPagerParentCC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPagerCC"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/SliderDotsCC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewPagerMI"
+                android:layout_marginTop="-30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/core_cat_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:orientation="vertical">
+            android:visibility="gone"
+            />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/advert_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone" />
 
-                <EditText
-                    android:id="@+id/my_search1"
-                    android:layout_width="210dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/boarded_circle"
-                    android:fontFamily="@font/bold"
-                    android:hint="Search products or supplies"
-                    android:padding="6dp"
-                    android:textSize="12dp" />
 
-                <TextView
-                    android:id="@+id/mine_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:drawableLeft="@drawable/search" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/view_orders"
-                    android:text="Orders"
-                    />
-            </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/search_item_recycler"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/core_cat_menu_items_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/core_cat_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="10dp"
-                android:id="@+id/core_cat_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="10dp"
-                android:id="@+id/advert_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical"
-                android:id="@+id/viewPagerParentCC"
-                android:layout_marginLeft="-10dp"
-                android:layout_marginRight="-10dp"
-                >
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/viewPagerCC"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="8dp"/>
+                shimmer:duration="800">
+
+                <!-- Adding 7 rows of placeholders -->
                 <LinearLayout
-                    android:id="@+id/SliderDotsCC"
-                    android:layout_below="@+id/viewPagerMI"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical|center_horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-35dp"
-                    />
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/core_cat_menu_items_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                    <include layout="@layout/data_placeholder_layout" />
 
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/core_cat_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical"
-                    shimmer:duration="800">
+                    <include layout="@layout/data_placeholder_layout" />
 
-                    <!-- Adding 7 rows of placeholders -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                    <include layout="@layout/data_placeholder_layout" />
 
-                        <include layout="@layout/data_placeholder_layout" />
+                    <include layout="@layout/data_placeholder_layout" />
 
-                        <include layout="@layout/data_placeholder_layout" />
+                    <include layout="@layout/data_placeholder_layout" />
 
-                        <include layout="@layout/data_placeholder_layout" />
+                    <include layout="@layout/data_placeholder_layout" />
 
-                        <include layout="@layout/data_placeholder_layout" />
+                    <include layout="@layout/data_placeholder_layout" />
+                </LinearLayout>
 
-                        <include layout="@layout/data_placeholder_layout" />
-
-                        <include layout="@layout/data_placeholder_layout" />
-
-                        <include layout="@layout/data_placeholder_layout" />
-                    </LinearLayout>
-
-                </com.facebook.shimmer.ShimmerFrameLayout>
-            </LinearLayout>
-
+            </com.facebook.shimmer.ShimmerFrameLayout>
         </LinearLayout>
+    </LinearLayout>
+
     <ProgressBar
+        android:id="@+id/this_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:id="@+id/this_progress_bar"
         android:layout_gravity="center_horizontal|bottom"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:text="Help"
         />
 </FrameLayout>
