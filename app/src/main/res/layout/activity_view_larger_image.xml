@@ -119,8 +119,6 @@
                         android:visibility="gone"
                         android:layout_height="wrap_content"/>
 
-
-
                     <TextView
                         android:layout_marginTop="10dp"
                         android:textSize="17sp"
@@ -187,23 +185,7 @@
                         android:id="@+id/extra_fields_recycler"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Comments"
-                        android:textSize="20dp"
-                        android:id="@+id/comments_title"
-                        />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/product_reviews"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/no_comments_alert"
-                        />
+
                     <Button
                         android:layout_marginTop="20dp"
                         android:background="@color/colorPrimary"
@@ -228,20 +210,15 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
+                            android:layout_weight="1">
 
                             <Button
-                                android:padding="10dp"
-                                android:background="@color/colorPrimary"
-                                android:textColor="@color/white"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/my_inquiry_btn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/colorPrimary"
                                 android:text="Inquire"
-                                />
+                                android:textColor="@color/white" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -284,9 +261,43 @@
                     </LinearLayout>
 
 
+
+
+
                 </LinearLayout>
 
 
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Comments"
+                        android:textSize="15dp"
+                        android:id="@+id/comments_title"
+                        />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/product_reviews"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/no_comments_alert"
+                        />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
