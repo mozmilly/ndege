@@ -430,7 +430,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                     if (placeSelected!=null){
                         double latitude = placeSelected.latitude;
                         double longitude = placeSelected.longitude;
-                        String name = placeName;
+                        String name = "";
 
                         AlertDialog alertDialog1 = new AlertDialog.Builder(CheckoutActivity.this).create();
                         alertDialog1.setMessage("Do you want to make this order?");
