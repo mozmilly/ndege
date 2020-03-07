@@ -58,6 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -71,6 +72,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,9 +124,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         marginText.setText(("Ksh."+getIntent().getStringExtra("margin")));
 
         margin = Double.parseDouble(getIntent().getStringExtra("margin"));
-
-
-
 
         UnitInterface unitInterface = ApiUtils.getUnitService();
 
@@ -437,7 +438,19 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        checkOut(json, username, transport_fee , name, latitude, longitude, desc.getText().toString().trim());
+                                        File file = (File) getIntent().getExtras().get("file");
+                                        RequestBody mFile = RequestBody.create(MediaType.parse("image/*"), file);
+                                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
+                                        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                                        RequestBody json_body = RequestBody.create(MediaType.parse("text/plain"), json);
+                                        RequestBody username_body = RequestBody.create(MediaType.parse("text/plain"), username);
+                                        RequestBody transport_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transport_fee));
+                                        RequestBody name_body = RequestBody.create(MediaType.parse("text/plain"), name);
+                                        RequestBody latitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(latitude));
+                                        RequestBody longitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(longitude));
+                                        RequestBody desc_body = RequestBody.create(MediaType.parse("text/plain"), desc.getText().toString().trim());
+
+                                        checkOut(json_body, username_body, transport_body , name_body, latitude_body, longitude_body, desc_body, fileToUpload, filename);
                                     }
                                 });
                         alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "cancel",
@@ -499,11 +512,11 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
     }
 
-    public void checkOut(String myCart, String username, double total_price, String name, double latitude, double longitude, String desc){
+    public void checkOut(RequestBody myCart, RequestBody username, RequestBody total_price, RequestBody name, RequestBody latitude, RequestBody longitude, RequestBody desc, MultipartBody.Part file, RequestBody file_name){
         checkOutInterface.make_order(myCart, username, total_price, name, latitude, longitude,
-                desc, getIntent().getStringExtra("client_name"),
-                getIntent().getStringExtra("client_phone"),
-                Integer.parseInt(getIntent().getStringExtra("margin")), "ndege").enqueue(new Callback<MenuItems>() {
+                desc, RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("client_name")),
+                RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("client_phone")),
+                RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("margin")), RequestBody.create(MediaType.parse("text/plain"),"ndege"), file, file_name).enqueue(new Callback<MenuItems>() {
             @Override
             public void onResponse(Call<MenuItems> call, Response<MenuItems> response) {
                 Toast.makeText(CheckoutActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();

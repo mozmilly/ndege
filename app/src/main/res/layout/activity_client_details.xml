@@ -72,6 +72,25 @@
                 android:hint="Your Profit Margin"
                 android:inputType="number"
                 />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/client_size"
+                android:hint="Client Size"
+                android:inputType="number"
+                />
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/client_image"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/upload_image"
+                android:text="Upload Client Image"
+                />
+
             <Button
                 android:textColor="#fff"
                 android:background="@color/colorPrimary"

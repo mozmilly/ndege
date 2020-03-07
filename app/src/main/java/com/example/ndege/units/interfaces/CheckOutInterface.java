@@ -2,26 +2,32 @@ package com.example.ndege.units.interfaces;
 
 import com.example.ndege.units.models.MenuItems;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface CheckOutInterface {
 
-    @FormUrlEncoded
+    @Multipart
     @POST("units/make_order/")
     Call<MenuItems> make_order(
-            @Field("items") String my_cart,
-            @Field("username") String username,
-            @Field("total_price") Double total_price,
-            @Field("loc_name") String name,
-            @Field("loc_lat") Double loc_lat,
-            @Field("loc_long") Double loc_long,
-            @Field("description") String description,
-            @Field("client_name") String client_name,
-            @Field("client_phone") String client_phone,
-            @Field("margin") int margin,
-            @Field("app_id") String app_id
+            @Part("items") RequestBody my_cart,
+            @Part("username") RequestBody username,
+            @Part("total_price") RequestBody total_price,
+            @Part("loc_name") RequestBody loc_name,
+            @Part("loc_lat") RequestBody loc_lat,
+            @Part("loc_long") RequestBody loc_long,
+            @Part("description") RequestBody description,
+            @Part("client_name") RequestBody client_name,
+            @Part("client_phone") RequestBody client_phone,
+            @Part("margin") RequestBody margin,
+            @Part("app_id") RequestBody app_id,
+            @Part MultipartBody.Part file,
+            @Part("name") RequestBody name
     );
 }
