@@ -400,7 +400,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 }
 
                                 TextView tv = findViewById(R.id.check_out_items_fee);
-                                tv.setText(String.valueOf("Ksh."+total_fee+margin));
+                                tv.setText(String.valueOf("Ksh."+(total_fee+margin)));
 
                             }
                         }
