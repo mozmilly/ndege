@@ -51,7 +51,7 @@ public abstract class PaginationListener  extends RecyclerView.OnScrollListener 
                 advertRecyclerView.setVisibility(View.GONE);
             } else {
                 coreRecyclerView.setVisibility(View.VISIBLE);
-                advertRecyclerView.setVisibility(View.GONE);
+                advertRecyclerView.setVisibility(View.VISIBLE);
             }
 
         }
