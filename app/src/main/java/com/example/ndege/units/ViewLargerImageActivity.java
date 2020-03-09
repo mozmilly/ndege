@@ -217,7 +217,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
             @Override
             public void onResponse(Call<ProductRating> call, Response<ProductRating> response) {
                 if (response.code()==200){
-                    Toast.makeText(ViewLargerImageActivity.this, String.valueOf(response.body()), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ViewLargerImageActivity.this, String.valueOf(response.body()), Toast.LENGTH_SHORT).show();
                     ratingBar.setRating(response.body().getPoints__avg());
                     rating.setText(String.valueOf(response.body().getPoints__avg()));
                 }

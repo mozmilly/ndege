@@ -400,7 +400,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 }
 
                                 TextView tv = findViewById(R.id.check_out_items_fee);
-                                tv.setText(String.valueOf("Ksh."+total_fee+margin));
+                                tv.setText(String.valueOf("Ksh."+(total_fee+margin)));
 
                             }
                         }
@@ -430,7 +430,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                     if (placeSelected!=null){
                         double latitude = placeSelected.latitude;
                         double longitude = placeSelected.longitude;
-                        String name = placeName;
+                        String name = "";
 
                         AlertDialog alertDialog1 = new AlertDialog.Builder(CheckoutActivity.this).create();
                         alertDialog1.setMessage("Do you want to make this order?");
