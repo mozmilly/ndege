@@ -398,7 +398,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                     price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+ndege_extra);
                                     total_fee += price;
                                 }
-
                                 TextView tv = findViewById(R.id.check_out_items_fee);
                                 tv.setText(String.valueOf("Ksh."+(total_fee+margin)));
 

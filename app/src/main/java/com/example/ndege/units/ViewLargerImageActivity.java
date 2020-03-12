@@ -189,7 +189,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 imageView.setOnTouchListener(ViewLargerImageActivity.this);
 
                 Glide.with(ViewLargerImageActivity.this)
-                        .load("https://bombaservices.pythonanywhere.com"+getIntent().getStringExtra("image"))
+                        .load("https://storage.googleapis.com/ndege/"+getIntent().getStringExtra("image"))
                         .into(imageView);
                 builder.addContentView(imageView, new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -374,7 +374,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
             }
         });
         Glide.with(ViewLargerImageActivity.this)
-                .load("https://bombaservices.pythonanywhere.com"+getIntent().getStringExtra("image"))
+                .load("https://storage.googleapis.com/ndege/"+getIntent().getStringExtra("image"))
                 .into(imageView);
 
         if (Objects.requireNonNull(getIntent().getStringExtra("menu_item")).equalsIgnoreCase("true")){

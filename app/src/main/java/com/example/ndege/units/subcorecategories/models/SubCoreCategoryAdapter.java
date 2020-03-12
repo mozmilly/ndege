@@ -55,9 +55,9 @@ public class SubCoreCategoryAdapter extends RecyclerView.Adapter<SubCoreCategory
         });
 
         if (subCoreCategoryList.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+subCoreCategoryList.get(position).getImage())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege/"+subCoreCategoryList.get(position).getImage())){
                 Picasso.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+subCoreCategoryList.get(position).getImage())
+                        .load("https://storage.googleapis.com/ndege/"+subCoreCategoryList.get(position).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(holder.imageView);
             }

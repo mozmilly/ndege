@@ -74,9 +74,9 @@ public class HelpAdapter extends RecyclerView.Adapter<HelpAdapter.MyViewHolder>{
         holder.playBtn.setVisibility(View.VISIBLE);
 
         if (helpList.get(position).getFile_image()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+helpList.get(position).getFile_image())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege/"+helpList.get(position).getFile_image())){
                 Picasso.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+helpList.get(position).getFile_image())
+                        .load("https://storage.googleapis.com/ndege/"+helpList.get(position).getFile_image())
                         .placeholder(R.drawable.place_holder)
                         .into(holder.imageView);
             }

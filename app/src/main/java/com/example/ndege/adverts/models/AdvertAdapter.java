@@ -56,9 +56,9 @@ public class AdvertAdapter extends RecyclerView.Adapter<AdvertAdapter.MyViewHold
         });
 
         if (advertList.get(position).getMy_image()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+advertList.get(position).getMy_image())){
+            if (URLUtil.isValidUrl(""+advertList.get(position).getMy_image())){
                 Picasso.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+advertList.get(position).getMy_image())
+                        .load(""+advertList.get(position).getMy_image())
                         .placeholder(R.drawable.place_holder)
                         .into(holder.image);
                 holder.image.setVisibility(View.VISIBLE);

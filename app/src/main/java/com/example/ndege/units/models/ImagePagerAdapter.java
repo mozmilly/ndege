@@ -71,9 +71,9 @@ public class ImagePagerAdapter extends PagerAdapter {
         });
 
         if (images.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+images.get(position).getImage())){
+            if (URLUtil.isValidUrl(""+images.get(position).getImage())){
                 Picasso.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+images.get(position).getImage())
+                        .load(""+images.get(position).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(imageView);
             }
