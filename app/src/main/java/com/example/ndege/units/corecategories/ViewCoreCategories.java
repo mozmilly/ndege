@@ -375,6 +375,9 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     recyclerView.setLayoutManager(glm);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(coreCategoryAdapter);
+                    if (!response.body().isEmpty())
+                        Toast.makeText(ViewCoreCategories.this, "", Toast.LENGTH_SHORT).show();
+                        recyclerView.setVisibility(View.VISIBLE);
                     coreCategoryAdapter.setOnClick(ViewCoreCategories.this);
                 }
             }
