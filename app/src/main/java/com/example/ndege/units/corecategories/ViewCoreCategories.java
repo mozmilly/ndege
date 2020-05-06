@@ -365,7 +365,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         });
 
         unitInterface = ApiUtils.getUnitService();
-        unitInterface.get_all_core_categories().enqueue(new Callback<List<CoreCategory>>() {
+        unitInterface.get_all_core_categories("Ndege").enqueue(new Callback<List<CoreCategory>>() {
             @Override
             public void onResponse(Call<List<CoreCategory>> call, Response<List<CoreCategory>> response) {
                 if (response.code()==200){

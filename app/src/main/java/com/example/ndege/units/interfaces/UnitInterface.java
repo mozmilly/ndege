@@ -80,8 +80,11 @@ public interface UnitInterface {
             @Field("menu_item_id") int menu_item_id
     );
 
-    @GET("units/get_all_core_categories/")
-    Call<List<CoreCategory>> get_all_core_categories();
+    @FormUrlEncoded
+    @POST("units/get_all_core_categories/")
+    Call<List<CoreCategory>> get_all_core_categories(
+            @Field("app_id") String app_id
+    );
 
     @FormUrlEncoded
     @POST("units/get_sub_corecategories/")
