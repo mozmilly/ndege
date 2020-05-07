@@ -388,7 +388,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         });
 
 
-        unitInterface.get_all_menu_items(currentPage).enqueue(new Callback<List<MenuItems>>() {
+        unitInterface.get_all_menu_items(currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
             @Override
             public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
                 if (response.code()==200){
@@ -510,7 +510,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                 ProgressBar progressBar = findViewById(R.id.this_progress_bar);
                 progressBar.setVisibility(View.VISIBLE);
                 unitInterface = ApiUtils.getUnitService();
-                unitInterface.get_all_menu_items(currentPage).enqueue(new Callback<List<MenuItems>>() {
+                unitInterface.get_all_menu_items(currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
                     @Override
                     public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
                         if (response.code()==200){
