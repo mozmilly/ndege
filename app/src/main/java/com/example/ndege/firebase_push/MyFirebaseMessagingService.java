@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +20,11 @@ import com.example.ndege.R;
 import com.example.ndege.units.corecategories.ViewCoreCategories;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -32,6 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.i("TAG", "Complete 42");
         title = remoteMessage.getNotification().getTitle();
         message = remoteMessage.getNotification().getBody();
+        bigpicture = remoteMessage.getNotification().getIcon();
 
         username = remoteMessage.getData().get("driver_username");
 
@@ -59,12 +67,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     channelId, channelName, importance);
             notificationManager.createNotificationChannel(mChannel);
         }
+        Bitmap bitmap ;
+        NotificationCompat.Builder mBuilder;
+        Bitmap bmp = null;
+        Log.d("bigPicture", bigpicture);
+        try {
+            InputStream in = new URL(bigpicture).openStream();
+            bmp = BitmapFactory.decodeStream(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher)
+
+         mBuilder = new NotificationCompat.Builder(this, channelId)
+                .setLargeIcon(bmp)
+                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setSound(soundUri)
+                 .setStyle(new NotificationCompat.BigPictureStyle()
+                         .bigPicture(bmp)
+                         .bigLargeIcon(null))
                 .setContentText(message);
+
 
 
         if(soundUri != null){
