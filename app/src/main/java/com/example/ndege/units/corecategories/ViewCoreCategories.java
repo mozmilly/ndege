@@ -41,6 +41,7 @@ import com.example.ndege.adverts.interfaces.AdvertInteface;
 import com.example.ndege.adverts.models.Advert;
 import com.example.ndege.adverts.models.AdvertAdapter;
 import com.example.ndege.help.HelpActivity;
+import com.example.ndege.login.NdegeTermsActivity;
 import com.example.ndege.login.interfaces.LoginInterface;
 import com.example.ndege.login.models.Login;
 import com.example.ndege.tokens.interfaces.TokenInterface;
@@ -590,26 +591,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (typeSelected == 0){
-                    LoginInterface loginInterface = ApiUtils.getLoginService();
-                    loginInterface.switch_to_ndege_reseller(getSharedPreferences("pref", MODE_PRIVATE).getString("user", "none")).enqueue(new Callback<Login>() {
-                        @Override
-                        public void onResponse(Call<Login> call, Response<Login> response) {
-                            if (response.code()==200){
-                                SharedPreferences sp=getSharedPreferences("pref",0);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putBoolean("is_ndege_reseller", response.body().isIs_ndege_reseller());
-                                editor.putBoolean("selected_type", true);
-                                editor.apply();
-                                dialog.dismiss();
-                            }
-                            recreate();
-                        }
-
-                        @Override
-                        public void onFailure(Call<Login> call, Throwable t) {
-                            recreate();
-                        }
-                    });
+                    startActivity(new Intent(ViewCoreCategories.this, NdegeTermsActivity.class));
                 } else if (typeSelected == 1){
                     SharedPreferences sp=getSharedPreferences("pref",0);
                     SharedPreferences.Editor editor = sp.edit();

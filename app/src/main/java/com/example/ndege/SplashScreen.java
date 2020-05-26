@@ -49,6 +49,7 @@ public class SplashScreen extends AppCompatActivity {
                             if (response.code()==200){
                                 SharedPreferences sp=getSharedPreferences("pref",0);
                                 SharedPreferences.Editor editor = sp.edit();
+                                Toast.makeText(SplashScreen.this, String.valueOf(response.body().isIs_ndege_reseller()), Toast.LENGTH_SHORT).show();
                                 editor.putBoolean("is_ndege_reseller", response.body().isIs_ndege_reseller());
                                 editor.putBoolean("selected_type", true);
                                 editor.apply();

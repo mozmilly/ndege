@@ -84,7 +84,10 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences sp=getSharedPreferences("pref",0);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putBoolean("is_ndege_reseller", response.body().isIs_ndege_reseller());
-                    editor.putBoolean("selected_type", true);
+                    if (response.body().isIs_ndege_reseller()){
+
+                        editor.putBoolean("selected_type", true);
+                    }
                     editor.apply();
 
 
