@@ -15,8 +15,10 @@ import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +29,8 @@ import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.ViewCoreCategories;
 import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.utils.ApiUtils;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -95,8 +99,13 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
             min_order = view.findViewById(R.id.min_order);
             general = view.findViewById(R.id.general_share);
             image.setDrawingCacheEnabled(true);
-        }
+            if (context.getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)) {
 
+            } else {
+                whatsapp.setVisibility(View.GONE);
+                general.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -130,11 +139,24 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                 @Override
                 public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
                     if (response.code()==200){
-                        for (ExtraPrice extraPrice: response.body()){
-                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
-                                holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                        if (context.getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
+                            for (ExtraPrice extraPrice: response.body()){
+
+                                if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                    holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                                }
+                            }
+                        } else {
+                            holder.whatsapp.setVisibility(View.GONE);
+                            holder.general.setVisibility(View.GONE);
+                            for (ExtraPrice extraPrice: response.body()){
+
+                                if (extraPrice.getName().equalsIgnoreCase("Supermarket")){
+                                    holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                                }
                             }
                         }
+
                     }
                 }
 
@@ -166,26 +188,47 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                 public void onClick(View v) {
                     Drawable drawable = holder.image.getDrawable();
                     BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
-                    Bitmap bitmap = bitmapDrawable .getBitmap();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
-                    String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
 
-                    Uri imgUri = Uri.parse(path);
-                    Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-                    whatsappIntent.setType("text/plain");
-                    whatsappIntent.setPackage("com.whatsapp");
-                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, menuItemsList.get(position).getItem_name()+"\n"+menuItemsList.get(position).getDescription());
-                    whatsappIntent.putExtra(Intent.EXTRA_STREAM, imgUri);
-                    whatsappIntent.setType("image/jpeg");
-                    whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
-                    try {
-                        context.startActivity(whatsappIntent);
-                    } catch (android.content.ActivityNotFoundException ex) {
+                        Picasso.with(context)
+                                .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())
+                                .into(new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
 
-                    }
+                                        Uri imgUri = Uri.parse(path);
+                                        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                                        whatsappIntent.setType("text/plain");
+                                        whatsappIntent.setPackage("com.whatsapp");
+                                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, menuItemsList.get(position).getItem_name()+"\n"+menuItemsList.get(position).getDescription());
+                                        whatsappIntent.putExtra(Intent.EXTRA_STREAM, imgUri);
+                                        whatsappIntent.setType("image/jpeg");
+                                        whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                        try {
+                                            context.startActivity(whatsappIntent);
+                                        } catch (android.content.ActivityNotFoundException ex) {
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                                    }
+
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                    }
+                                });
+
+
+
 
                 }
             });
@@ -194,22 +237,36 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                 @Override
                 public void onClick(View v) {
                     Drawable drawable = holder.image.getDrawable();
-                    BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
-                    Bitmap bitmap = bitmapDrawable .getBitmap();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
-                    String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+                    Picasso.with(context)
+                            .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())
+                            .into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
 
-                    Uri imgUri = Uri.parse(path);
-                    Intent general = new Intent(Intent.ACTION_SEND);
-                    general.setType("text/plain");
-                    general.putExtra(Intent.EXTRA_TEXT, menuItemsList.get(position).getItem_name()+"\n"+menuItemsList.get(position).getDescription());
-                    general.putExtra(Intent.EXTRA_STREAM, imgUri);
-                    general.setType("image/jpeg");
-                    general.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    Intent shareIntent = Intent.createChooser(general, null);
-                    context.startActivity(shareIntent);
+                                    Uri imgUri = Uri.parse(path);
+                                    Intent general = new Intent(Intent.ACTION_SEND);
+                                    general.setType("text/plain");
+                                    general.putExtra(Intent.EXTRA_TEXT, menuItemsList.get(position).getItem_name()+"\n"+menuItemsList.get(position).getDescription());
+                                    general.putExtra(Intent.EXTRA_STREAM, imgUri);
+                                    general.setType("image/jpeg");
+                                    general.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    Intent shareIntent = Intent.createChooser(general, null);
+                                    context.startActivity(shareIntent);
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Drawable errorDrawable) {
+
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                }
+                            });
+
                 }
             });
 

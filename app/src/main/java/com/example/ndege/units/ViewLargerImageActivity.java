@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -59,6 +60,8 @@ import com.example.ndege.units.product_reviews.models.ProductReviewAdapter;
 import com.example.ndege.utils.ApiUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
@@ -160,6 +163,12 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
 
         whatsapp = findViewById(R.id.share_whatsapp_btn);
 
+        if (getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)) {
+
+        } else {
+            whatsapp.setVisibility(View.GONE);
+        }
+
         sendInquiry = findViewById(R.id.my_inquiry_btn);
         name = findViewById(R.id.large_image_name);
         description = findViewById(R.id.large_image_description);
@@ -260,25 +269,41 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 Drawable drawable = imageView.getDrawable();
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
                 Bitmap bitmap = bitmapDrawable .getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                Picasso.with(ViewLargerImageActivity.this)
+                        .load("https://bombaservices.pythonanywhere.com"+menuItems.getImage())
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
 
-                String path = MediaStore.Images.Media.insertImage(ViewLargerImageActivity.this.getContentResolver(), bitmap, "Title", null);
+                                Uri imgUri = Uri.parse(path);
+                                Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                                whatsappIntent.setType("text/plain");
+                                whatsappIntent.setPackage("com.whatsapp");
+                                whatsappIntent.putExtra(Intent.EXTRA_TEXT, menuItems.getItem_name()+"\n"+menuItems.getDescription());
+                                whatsappIntent.putExtra(Intent.EXTRA_STREAM, imgUri);
+                                whatsappIntent.setType("image/jpeg");
+                                whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                Uri imgUri = Uri.parse(path);
-                Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-                whatsappIntent.setType("text/plain");
-                whatsappIntent.setPackage("com.whatsapp");
-                whatsappIntent.putExtra(Intent.EXTRA_TEXT, menuItems.getItem_name()+"\n"+menuItems.getDescription());
-                whatsappIntent.putExtra(Intent.EXTRA_STREAM, imgUri);
-                whatsappIntent.setType("image/jpeg");
-                whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                try {
+                                    startActivity(whatsappIntent);
+                                } catch (android.content.ActivityNotFoundException ex) {
 
-                try {
-                    startActivity(whatsappIntent);
-                } catch (android.content.ActivityNotFoundException ex) {
-                    Log.d("TAG", ex.getMessage());
-                }
+                                }
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        });
+
+
 
             }
         });
@@ -386,11 +411,22 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 @Override
                 public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
                     if (response.code()==200){
-                        for (ExtraPrice extraPrice: response.body()){
-                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
-                                price.setText(String.valueOf("Ksh."+(menuItems.getPrice()+extraPrice.getAmount())));
+                        if (getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
+                            for (ExtraPrice extraPrice: response.body()){
+                                if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                    price.setText(String.valueOf("Ksh."+(menuItems.getPrice()+extraPrice.getAmount())));
+
+                                }
+                            }
+                        } else {
+                            whatsapp.setVisibility(View.GONE);
+                            for (ExtraPrice extraPrice: response.body()){
+                                if (extraPrice.getName().equalsIgnoreCase("Supermarket")){
+                                    price.setText(String.valueOf("Ksh."+(menuItems.getPrice()+extraPrice.getAmount())));
+                                }
                             }
                         }
+
                     }
                 }
 

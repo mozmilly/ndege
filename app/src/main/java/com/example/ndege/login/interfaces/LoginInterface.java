@@ -1,5 +1,7 @@
 package com.example.ndege.login.interfaces;
 
+import android.util.Log;
+
 import com.example.ndege.login.models.Login;
 
 import retrofit2.Call;
@@ -13,5 +15,11 @@ public interface LoginInterface {
     Call<Login> perform_login(
             @Field("username") String username,
             @Field("password") String password
+    );
+
+    @FormUrlEncoded
+    @POST("api/switch_to_ndege_reseller/")
+    Call<Login> switch_to_ndege_reseller(
+            @Field("username") String username
     );
 }
