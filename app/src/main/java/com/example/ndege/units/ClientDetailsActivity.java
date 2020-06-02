@@ -58,6 +58,17 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
         next = findViewById(R.id.next_btn);
         upload = findViewById(R.id.upload_image);
         clientSize = findViewById(R.id.client_size);
+        if (getSharedPreferences("pref", MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
+
+        } else {
+            Intent intent = new Intent(ClientDetailsActivity.this, CheckoutActivity.class);
+            intent.putExtra("client_name", "");
+            intent.putExtra("client_phone", "");
+            intent.putExtra("margin", "");
+            intent.putExtra("client_size", "");
+            intent.putExtra("file", "");
+            startActivity(intent);
+        }
 
         upload.setOnClickListener(v ->{
             AlertDialog alertDialog1 = new AlertDialog.Builder(ClientDetailsActivity.this).create();
@@ -121,6 +132,8 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
                 }
             }
         });
+
+
 
     }
 

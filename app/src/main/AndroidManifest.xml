@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".landing"></activity>
+        <activity android:name=".landing" />
         <activity android:name=".help.ViewHelpDetails" />
         <activity android:name=".help.HelpActivity" />
         <activity android:name=".units.orders.CommentOnProduct" />
@@ -62,6 +62,8 @@
                 <action android:name="android.media.VOLUME_CHANGED_ACTION" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".login.NdegeTermsActivity"></activity>
     </application>
 
 </manifest>

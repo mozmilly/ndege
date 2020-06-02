@@ -80,8 +80,11 @@ public interface UnitInterface {
             @Field("menu_item_id") int menu_item_id
     );
 
-    @GET("units/get_all_core_categories/")
-    Call<List<CoreCategory>> get_all_core_categories();
+    @FormUrlEncoded
+    @POST("units/get_all_core_categories/")
+    Call<List<CoreCategory>> get_all_core_categories(
+            @Field("app_id") String app_id
+    );
 
     @FormUrlEncoded
     @POST("units/get_sub_corecategories/")
@@ -105,28 +108,32 @@ public interface UnitInterface {
     @POST("units/get_menu_items_api_view/")
     Call<List<MenuItems>> get_menu_items_api_view(
             @Field("id") int id,
-            @Field("page") int page
+            @Field("page") int page,
+            @Field("app_id") String app_id
     );
 
 
     @FormUrlEncoded
     @POST("units/get_all_menu_items_view/")
     Call<List<MenuItems>> get_all_menu_items(
-            @Field("page") int page
+            @Field("page") int page,
+            @Field("app_id") String app_id
     );
 
     @FormUrlEncoded
     @POST("units/get_core_cat_menu_items/")
     Call<List<MenuItems>> get_core_cat_menu_items(
             @Field("id") int id,
-            @Field("page") int page
+            @Field("page") int page,
+            @Field("app_id") String app_id
     );
 
     @FormUrlEncoded
     @POST("units/get_sub_core_cat_menu_items/")
     Call<List<MenuItems>> get_sub_core_cat_menu_items(
             @Field("id") int id,
-            @Field("page") int page
+            @Field("page") int page,
+            @Field("app_id") String app_id
     );
 
 
@@ -134,7 +141,8 @@ public interface UnitInterface {
     @POST("units/get_main_cat_menu_items/")
     Call<List<MenuItems>> get_main_cat_menu_items(
             @Field("id") int id,
-            @Field("page") int page
+            @Field("page") int page,
+            @Field("app_id") String app_id
     );
 
 
