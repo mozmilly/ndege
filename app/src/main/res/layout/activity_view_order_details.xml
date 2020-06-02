@@ -104,14 +104,25 @@
             <LinearLayout
                 android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
                 <Button
-                    android:background="@drawable/roundedbtn"
+                    android:background="@color/colorPrimary"
                     android:layout_width="match_parent"
                     android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:id="@+id/call_my_client"
                     android:text="Call"
+                    />
+                <Button
+                    android:layout_marginTop="10dp"
+                    android:background="@color/green_500"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/whatsapp"
+                    android:text="Whatsapp"
                     />
             </LinearLayout>
 

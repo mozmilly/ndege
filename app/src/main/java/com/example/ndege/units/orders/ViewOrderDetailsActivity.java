@@ -1,11 +1,17 @@
 package com.example.ndege.units.orders;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,10 +39,13 @@ import retrofit2.Response;
 public class ViewOrderDetailsActivity extends AppCompatActivity implements OrderMenuItemAdapter.OnItemClicked {
     MyOrder myOrder;
     TextView order_name, delivery_fee, price, client_name, client_phone, margin, was_paid;
-    Button call;
+    Button call, whatsapp;
     RecyclerView recyclerView;
     OrderMenuItemAdapter orderMenuItemAdapter;
     List<MenuItems> menuItemsList;
+
+    private static final int REQUEST_PHONE_CALL = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +62,7 @@ public class ViewOrderDetailsActivity extends AppCompatActivity implements Order
         was_paid = findViewById(R.id.myclient_paid);
 
         call = findViewById(R.id.call_my_client);
+        whatsapp = findViewById(R.id.whatsapp);
 
         recyclerView = findViewById(R.id.order_details_recycler);
 
@@ -60,6 +70,41 @@ public class ViewOrderDetailsActivity extends AppCompatActivity implements Order
         delivery_fee.setText(("Delivery Fee: "+myOrder.getTransportation_fee()));
         price.setText(("Items Price: "+myOrder.getPrice()));
 
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + "0753540580"));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+                        if (ContextCompat.checkSelfPermission(ViewOrderDetailsActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(ViewOrderDetailsActivity.this, new String[]{Manifest.permission.CALL_PHONE},REQUEST_PHONE_CALL);
+                        }
+                        else
+                        {
+                            startActivity(intent);
+                        }
+
+                    } else {
+                        startActivity(intent);
+                    }
+                } else {
+                    startActivity(intent);
+                }
+            }
+        });
+
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
+                String url = "https://wa.me/254753540580";
+                intentWhatsapp.setData(Uri.parse(url));
+                intentWhatsapp.setPackage("com.whatsapp");
+                startActivity(intentWhatsapp);
+            }
+        });
         OrderInterface orderInterface = ApiUtils.getOrderService();
 
         orderInterface.get_order_extra(myOrder.getId()).enqueue(new Callback<OrderExtra>() {
@@ -138,6 +183,23 @@ public class ViewOrderDetailsActivity extends AppCompatActivity implements Order
             intent.putExtra("image", menuItemsList.get(position).getImage());
             ViewCoreCategories.setMenuItems(menuItemsList.get(position));
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PHONE_CALL: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                }
+                else
+                {
+
+                }
+                return;
+            }
         }
     }
 }

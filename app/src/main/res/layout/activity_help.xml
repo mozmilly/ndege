@@ -40,6 +40,71 @@
         </LinearLayout>
     </LinearLayout>
 
+
+    <androidx.cardview.widget.CardView
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <TextView
+              android:textSize="17dp"
+              android:textStyle="bold"
+              android:padding="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Call us on 0753-540-580"
+              />
+
+          <TextView
+              android:textSize="17dp"
+              android:textStyle="bold"
+              android:padding="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Email:care@ndege.africa"
+              />
+
+          <TextView
+              android:textSize="17dp"
+              android:textStyle="bold"
+              android:padding="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Website:www.ndege.africa"
+              />
+      </LinearLayout>
+        <LinearLayout
+           android:gravity="right"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Call"
+                android:id="@+id/call_support"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"/>
+            <Button
+                android:layout_marginTop="10dp"
+                android:layout_width="100dp"
+                android:background="@color/green_500"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:id="@+id/whatsapp"
+                android:text="Whatsapp"
+                />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
