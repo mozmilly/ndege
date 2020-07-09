@@ -196,9 +196,9 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 ImageView imageView = new ImageView(ViewLargerImageActivity.this);
 
                 imageView.setOnTouchListener(ViewLargerImageActivity.this);
-
+                Toast.makeText(ViewLargerImageActivity.this, getIntent().getStringExtra("image"), Toast.LENGTH_SHORT).show();
                 Glide.with(ViewLargerImageActivity.this)
-                        .load("https://bombaservices.pythonanywhere.com"+getIntent().getStringExtra("image"))
+                        .load("https://storage.googleapis.com/ndege_app/"+getIntent().getStringExtra("image"))
                         .into(imageView);
                 builder.addContentView(imageView, new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -270,7 +270,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
                 Bitmap bitmap = bitmapDrawable .getBitmap();
                 Picasso.with(ViewLargerImageActivity.this)
-                        .load("https://bombaservices.pythonanywhere.com"+menuItems.getImage())
+                        .load("https://ndege.pythonanywhere.com"+menuItems.getImage())
                         .into(new Target() {
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {

@@ -12,6 +12,7 @@ import android.view.Window;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -71,13 +72,14 @@ public class ImagePagerAdapter extends PagerAdapter {
         });
 
         if (images.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+images.get(position).getImage())){
+            if (URLUtil.isValidUrl(images.get(position).getImage())){
                 Picasso.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+images.get(position).getImage())
+                        .load(images.get(position).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(imageView);
             }
         }
+        Toast.makeText(context, images.get(position).getImage(), Toast.LENGTH_SHORT).show();
 
         ViewPager vp = (ViewPager) container;
         vp.addView(view, 0);
