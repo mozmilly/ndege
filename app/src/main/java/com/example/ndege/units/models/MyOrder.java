@@ -10,6 +10,15 @@ public class MyOrder implements java.io.Serializable {
     private double transportation_fee;
     private String order_name;
     private String status;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public MyOrderUnit getUnit() {
         return this.unit;

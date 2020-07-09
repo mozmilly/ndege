@@ -2,6 +2,7 @@ package com.example.ndege.login;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -80,6 +81,14 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 if (response.code()==200){
                     Login login = response.body();
+                    SharedPreferences sp=getSharedPreferences("pref",0);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean("is_ndege_reseller", response.body().isIs_ndege_reseller());
+                    if (response.body().isIs_ndege_reseller()){
+
+                        editor.putBoolean("selected_type", true);
+                    }
+                    editor.apply();
 
 
                     Toast.makeText(LoginActivity.this, login.getUsername(), Toast.LENGTH_SHORT).show();

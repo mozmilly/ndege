@@ -1,5 +1,6 @@
 package com.example.ndege.units;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,11 +35,13 @@ import com.example.ndege.units.interfaces.CheckOutInterface;
 import com.example.ndege.units.interfaces.FeeInterface;
 import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.CheckOutAdapter;
+import com.example.ndege.units.models.ExtraPrice;
 import com.example.ndege.units.models.Fee;
 import com.example.ndege.units.models.LocationName;
 import com.example.ndege.units.models.LocationPrice;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MyCart;
+import com.example.ndege.units.orders.CheckOutSuccess;
 import com.example.ndege.utils.ApiUtils;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -56,6 +59,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,6 +73,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -106,6 +113,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
     double margin = 0;
     Spinner locationSpinner;
+    double ndege_extra = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,12 +124,15 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         marginText = findViewById(R.id.checkout_margin);
         marginText.setText(("Ksh."+getIntent().getStringExtra("margin")));
 
-        margin = Double.parseDouble(getIntent().getStringExtra("margin"));
+        try{
 
+            margin = Double.parseDouble(getIntent().getStringExtra("margin"));
+        } catch (Exception ex){
 
-
+        }
 
         UnitInterface unitInterface = ApiUtils.getUnitService();
+
 
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -373,22 +384,62 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            CheckoutActivity.super.onBackPressed();
+                            Intent intent = new Intent(CheckoutActivity.this, ViewCoreCategories.class);
+                            startActivity(intent);
                         }
                     });
             alertDialog1.show();
         } else {
             arrayList = gson.fromJson(json, type);
 
+            unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+                @Override
+                public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                    if (response.code()==200){
+                        if (getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)) {
 
-            double price = 0;
-            for (MyCart myCart : arrayList) {
-                price = myCart.getQuantity() * myCart.getMenuItems().getPrice();
-                total_fee += price;
-            }
+                            for (ExtraPrice extraPrice : response.body()) {
+                                if (extraPrice.getName().equalsIgnoreCase("Ndege")) {
+                                    ndege_extra = extraPrice.getAmount();
 
-            TextView tv = findViewById(R.id.check_out_items_fee);
-            tv.setText(String.valueOf("Ksh."+total_fee+transport_fee));
+                                    double price = 0;
+                                    for (MyCart myCart : arrayList) {
+                                        price = myCart.getQuantity() * (myCart.getMenuItems().getPrice() + ndege_extra);
+                                        total_fee += price;
+                                    }
+
+                                    TextView tv = findViewById(R.id.check_out_items_fee);
+                                    tv.setText(String.valueOf("Ksh." + (total_fee + margin)));
+
+                                }
+                            }
+                        } else {
+                            for (ExtraPrice extraPrice : response.body()) {
+                                if (extraPrice.getName().equalsIgnoreCase("Supermarket")) {
+                                    ndege_extra = extraPrice.getAmount();
+
+                                    double price = 0;
+                                    for (MyCart myCart : arrayList) {
+                                        price = myCart.getQuantity() * (myCart.getMenuItems().getPrice() + ndege_extra);
+                                        total_fee += price;
+                                    }
+
+                                    TextView tv = findViewById(R.id.check_out_items_fee);
+                                    tv.setText(String.valueOf("Ksh." + (total_fee + margin)));
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
+
+                }
+            });
+
+
             SharedPreferences sp = getSharedPreferences("pref", 0);
             String username = sp.getString("user", "no user");
 
@@ -405,7 +456,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                     if (placeSelected!=null){
                         double latitude = placeSelected.latitude;
                         double longitude = placeSelected.longitude;
-                        String name = placeName;
+                        String name = "";
 
                         AlertDialog alertDialog1 = new AlertDialog.Builder(CheckoutActivity.this).create();
                         alertDialog1.setMessage("Do you want to make this order?");
@@ -413,7 +464,19 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        checkOut(json, username, transport_fee , name, latitude, longitude, desc.getText().toString().trim());
+                                        File file = (File) getIntent().getExtras().get("file");
+                                        RequestBody mFile = RequestBody.create(MediaType.parse("image/*"), file);
+                                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
+                                        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                                        RequestBody json_body = RequestBody.create(MediaType.parse("text/plain"), json);
+                                        RequestBody username_body = RequestBody.create(MediaType.parse("text/plain"), username);
+                                        RequestBody transport_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transport_fee));
+                                        RequestBody name_body = RequestBody.create(MediaType.parse("text/plain"), name);
+                                        RequestBody latitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(latitude));
+                                        RequestBody longitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(longitude));
+                                        RequestBody desc_body = RequestBody.create(MediaType.parse("text/plain"), desc.getText().toString().trim());
+
+                                        checkOut(json_body, username_body, transport_body , name_body, latitude_body, longitude_body, desc_body, fileToUpload, filename);
                                     }
                                 });
                         alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "cancel",
@@ -475,18 +538,18 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
     }
 
-    public void checkOut(String myCart, String username, double total_price, String name, double latitude, double longitude, String desc){
+    public void checkOut(RequestBody myCart, RequestBody username, RequestBody total_price, RequestBody name, RequestBody latitude, RequestBody longitude, RequestBody desc, MultipartBody.Part file, RequestBody file_name){
         checkOutInterface.make_order(myCart, username, total_price, name, latitude, longitude,
-                desc, getIntent().getStringExtra("client_name"),
-                getIntent().getStringExtra("client_phone"),
-                Integer.parseInt(getIntent().getStringExtra("margin"))).enqueue(new Callback<MenuItems>() {
+                desc, RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("client_name")),
+                RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("client_phone")),
+                RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("margin")), RequestBody.create(MediaType.parse("text/plain"),"ndege"), file, file_name).enqueue(new Callback<MenuItems>() {
             @Override
             public void onResponse(Call<MenuItems> call, Response<MenuItems> response) {
                 Toast.makeText(CheckoutActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 if (response.code()==200){
                     SharedPreferences settings = getSharedPreferences("Cart", 0);
                     settings.edit().clear().apply();
-                    Intent intent = new Intent(CheckoutActivity.this, ViewCoreCategories.class);
+                    Intent intent = new Intent(CheckoutActivity.this, CheckOutSuccess.class);
                     startActivity(intent);
 
                     SharedPreferences sp = getSharedPreferences("pref", 0);
@@ -605,4 +668,10 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(CheckoutActivity.this, ViewCoreCategories.class);
+        startActivity(intent);
+    }
 }

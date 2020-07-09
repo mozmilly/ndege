@@ -75,6 +75,11 @@ public class MySearchAdapter extends RecyclerView.Adapter<MySearchAdapter.MyView
 
         myViewHolder.name.setText(menuItemsList.get(i).getItem_name());
         myViewHolder.price.setText(("Ksh."+(menuItemsList.get(i).getPrice())));
+
+        if (menuItemsList.get(i).getWas_price()==0){
+            myViewHolder.was_price.setVisibility(View.GONE);
+            myViewHolder.percentage_off.setVisibility(View.GONE);
+        }
         myViewHolder.was_price.setPaintFlags(myViewHolder.was_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         myViewHolder.was_price.setText(("Was Ksh."+menuItemsList.get(i).getWas_price()));
         double difference = menuItemsList.get(i).getWas_price() - menuItemsList.get(i).getPrice();

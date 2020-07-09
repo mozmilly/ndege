@@ -84,9 +84,6 @@ public class MentionsAdapter extends RecyclerView.Adapter<MentionsAdapter.MyView
                 onClick.onMentionItemClick(i);
             }
         });
-
-
-
     }
 
     @Override

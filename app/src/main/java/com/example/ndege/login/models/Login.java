@@ -11,6 +11,18 @@ public class Login {
     @Expose
     private String password;
 
+    @SerializedName("is_ndege_reseller")
+    @Expose
+    private boolean is_ndege_reseller;
+
+    public boolean isIs_ndege_reseller() {
+        return is_ndege_reseller;
+    }
+
+    public void setIs_ndege_reseller(boolean is_ndege_reseller) {
+        this.is_ndege_reseller = is_ndege_reseller;
+    }
+
     public String getUsername() {
         return username;
     }

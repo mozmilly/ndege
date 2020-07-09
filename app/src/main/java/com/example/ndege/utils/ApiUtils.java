@@ -1,13 +1,18 @@
 package com.example.ndege.utils;
 
 
+import com.example.ndege.adverts.interfaces.AdvertInteface;
+import com.example.ndege.help.interfaces.HelpInterface;
 import com.example.ndege.login.interfaces.LoginInterface;
 import com.example.ndege.login.interfaces.SignUpInterface;
+import com.example.ndege.tokens.interfaces.TokenInterface;
 import com.example.ndege.units.interfaces.CheckOutInterface;
 import com.example.ndege.units.interfaces.FeeInterface;
 import com.example.ndege.units.interfaces.InquiryInterface;
 import com.example.ndege.units.interfaces.MentionInterface;
+import com.example.ndege.units.interfaces.OrderInterface;
 import com.example.ndege.units.interfaces.UnitInterface;
+import com.example.ndege.units.product_reviews.interfaces.ProductReviewInterface;
 
 public class ApiUtils {
     private ApiUtils() {}
@@ -41,4 +46,23 @@ public class ApiUtils {
         return RetrofitClient.getClient(BASE_URL).create(CheckOutInterface.class);
     }
 
+    public static OrderInterface getOrderService(){
+        return RetrofitClient.getClient(BASE_URL).create(OrderInterface.class);
+    }
+
+    public static AdvertInteface get_advert_service(){
+        return RetrofitClient.getClient(BASE_URL).create(AdvertInteface.class);
+    }
+
+    public static ProductReviewInterface get_product_review_service(){
+        return RetrofitClient.getClient(BASE_URL).create(ProductReviewInterface.class);
+    }
+
+    public static TokenInterface getTokenService(){
+        return RetrofitClient.getClient(BASE_URL).create(TokenInterface.class);
+    }
+
+    public static HelpInterface getHelpService(){
+        return RetrofitClient.getClient(BASE_URL).create(HelpInterface.class);
+    }
 }
