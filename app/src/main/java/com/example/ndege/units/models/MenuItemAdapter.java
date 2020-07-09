@@ -122,9 +122,9 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             if (menuItemsList.get(position).getImage()!=null){
-                if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())){
+                if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege/"+menuItemsList.get(position).getImage())){
                     Glide.with(context)
-                            .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
+                            .load("https://storage.googleapis.com/ndege/"+menuItemsList.get(position).getImage())
                             .into(holder.image);
                     holder.image.setVisibility(View.VISIBLE);
                 }

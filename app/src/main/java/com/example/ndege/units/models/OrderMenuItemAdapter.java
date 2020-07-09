@@ -45,9 +45,9 @@ public class OrderMenuItemAdapter extends RecyclerView.Adapter<OrderMenuItemAdap
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if (menuItemsList.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege/"+menuItemsList.get(position).getImage())){
                 Glide.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())
+                        .load("https://storage.googleapis.com/ndege/"+menuItemsList.get(position).getImage())
                         .into(holder.image);
                 holder.image.setVisibility(View.VISIBLE);
             }

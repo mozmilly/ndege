@@ -16,7 +16,7 @@ import com.example.ndege.units.product_reviews.interfaces.ProductReviewInterface
 
 public class ApiUtils {
     private ApiUtils() {}
-    public static final String BASE_URL = "https://ndege.pythonanywhere.com/";
+    public static final String BASE_URL = "http://ndege.pythonanywhere.com/";
 
     public static LoginInterface getLoginService(){
         return RetrofitClient.getClient(BASE_URL).create(LoginInterface.class);
