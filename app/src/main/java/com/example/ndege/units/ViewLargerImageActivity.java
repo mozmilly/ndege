@@ -269,7 +269,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
                 Bitmap bitmap = bitmapDrawable .getBitmap();
                 Picasso.with(ViewLargerImageActivity.this)
-                        .load(""+menuItems.getImage())
+                        .load("https://storage.googleapis.com/ndege_app/"+getIntent().getStringExtra("image"))
                         .into(new Target() {
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -285,7 +285,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                                 whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                                 try {
-                                    startActivity(whatsappIntent);
+                                   startActivity(whatsappIntent);
                                 } catch (android.content.ActivityNotFoundException ex) {
 
                                 }
