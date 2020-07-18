@@ -1,6 +1,8 @@
 package com.example.ndege.units.corecategories;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +12,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -37,6 +41,9 @@ import com.example.ndege.adverts.interfaces.AdvertInteface;
 import com.example.ndege.adverts.models.Advert;
 import com.example.ndege.adverts.models.AdvertAdapter;
 import com.example.ndege.help.HelpActivity;
+import com.example.ndege.login.NdegeTermsActivity;
+import com.example.ndege.login.interfaces.LoginInterface;
+import com.example.ndege.login.models.Login;
 import com.example.ndege.tokens.interfaces.TokenInterface;
 import com.example.ndege.tokens.models.TokenModel;
 import com.example.ndege.units.ViewLargerImageActivity;
@@ -77,6 +84,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
     MenuItemAdapter menuItemAdapter;
     List<MenuItems> menuItemsList;
     List<CoreCategory> coreCategoryList;
+    int typeSelected = 0;
 
 
     private static MenuItems menuItems;
@@ -161,6 +169,12 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             }
         });
 
+        SharedPreferences sp=getSharedPreferences("pref",0);
+        if (!sp.getBoolean("selected_type", false)){
+            getChooseType();
+        }
+
+        Toast.makeText(this, String.valueOf(getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)), Toast.LENGTH_SHORT).show();
 
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -365,7 +379,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         });
 
         unitInterface = ApiUtils.getUnitService();
-        unitInterface.get_all_core_categories().enqueue(new Callback<List<CoreCategory>>() {
+        unitInterface.get_all_core_categories("Ndege").enqueue(new Callback<List<CoreCategory>>() {
             @Override
             public void onResponse(Call<List<CoreCategory>> call, Response<List<CoreCategory>> response) {
                 if (response.code()==200){
@@ -375,6 +389,9 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     recyclerView.setLayoutManager(glm);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(coreCategoryAdapter);
+                    if (!response.body().isEmpty())
+//                        Toast.makeText(ViewCoreCategories.this, "", Toast.LENGTH_SHORT).show();
+                    recyclerView.setVisibility(View.VISIBLE);
                     coreCategoryAdapter.setOnClick(ViewCoreCategories.this);
                 }
             }
@@ -385,7 +402,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         });
 
 
-        unitInterface.get_all_menu_items(currentPage).enqueue(new Callback<List<MenuItems>>() {
+        unitInterface.get_all_menu_items(currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
             @Override
             public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
                 if (response.code()==200){
@@ -507,7 +524,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                 ProgressBar progressBar = findViewById(R.id.this_progress_bar);
                 progressBar.setVisibility(View.VISIBLE);
                 unitInterface = ApiUtils.getUnitService();
-                unitInterface.get_all_menu_items(currentPage).enqueue(new Callback<List<MenuItems>>() {
+                unitInterface.get_all_menu_items(currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
                     @Override
                     public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
                         if (response.code()==200){
@@ -554,5 +571,49 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         };
 
         new Handler().postDelayed(mUpdateResults, 10);
+    }
+
+    public void getChooseType(){
+
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        CharSequence items[] = new CharSequence[] {"Ndege Reseller", "Buyer"};
+        adb.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface d, int n) {
+                typeSelected = n;
+                Toast.makeText(ViewCoreCategories.this, String.valueOf(n), Toast.LENGTH_SHORT).show();
+            }
+
+        });
+        adb.setTitle("Choose how you are going to use the platform..");
+        adb.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (typeSelected == 0){
+                    startActivity(new Intent(ViewCoreCategories.this, NdegeTermsActivity.class));
+                } else if (typeSelected == 1){
+                    SharedPreferences sp=getSharedPreferences("pref",0);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean("is_ndege_reseller", false);
+                    editor.putBoolean("selected_type", true);
+                    editor.apply();
+                    dialog.dismiss();
+                    recreate();
+                }
+
+            }
+        });
+        adb.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+                return keyCode == KeyEvent.KEYCODE_BACK;
+            }
+        });
+        AlertDialog dialog = adb.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
     }
 }

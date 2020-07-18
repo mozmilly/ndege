@@ -1,5 +1,6 @@
 package com.example.ndege.units;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -123,7 +124,12 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         marginText = findViewById(R.id.checkout_margin);
         marginText.setText(("Ksh."+getIntent().getStringExtra("margin")));
 
-        margin = Double.parseDouble(getIntent().getStringExtra("margin"));
+        try{
+
+            margin = Double.parseDouble(getIntent().getStringExtra("margin"));
+        } catch (Exception ex){
+
+        }
 
         UnitInterface unitInterface = ApiUtils.getUnitService();
 
@@ -378,7 +384,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            CheckoutActivity.super.onBackPressed();
+                            Intent intent = new Intent(CheckoutActivity.this, ViewCoreCategories.class);
+                            startActivity(intent);
                         }
                     });
             alertDialog1.show();
@@ -389,9 +396,27 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                 @Override
                 public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
                     if (response.code()==200){
-                        for (ExtraPrice extraPrice: response.body()){
-                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
-                                ndege_extra = extraPrice.getAmount();
+                        if (getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)) {
+
+                            for (ExtraPrice extraPrice : response.body()) {
+                                if (extraPrice.getName().equalsIgnoreCase("Ndege")) {
+                                    ndege_extra = extraPrice.getAmount();
+
+                                    double price = 0;
+                                    for (MyCart myCart : arrayList) {
+                                        price = myCart.getQuantity() * (myCart.getMenuItems().getPrice() + ndege_extra);
+                                        total_fee += price;
+                                    }
+
+                                    TextView tv = findViewById(R.id.check_out_items_fee);
+                                    tv.setText(String.valueOf("Ksh." + (total_fee + margin)));
+
+                                }
+                            }
+                        } else {
+                            for (ExtraPrice extraPrice : response.body()) {
+                                if (extraPrice.getName().equalsIgnoreCase("Supermarket")) {
+                                    ndege_extra = extraPrice.getAmount();
 
                                 double price = 0;
                                 for (MyCart myCart : arrayList) {
@@ -401,6 +426,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 TextView tv = findViewById(R.id.check_out_items_fee);
                                 tv.setText(String.valueOf("Ksh."+(total_fee+margin)));
 
+                                }
                             }
                         }
                     }

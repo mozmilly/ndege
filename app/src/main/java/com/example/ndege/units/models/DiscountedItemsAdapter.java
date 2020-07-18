@@ -65,9 +65,9 @@ public class DiscountedItemsAdapter extends RecyclerView.Adapter<DiscountedItems
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
 //        if (menuItemsList.get(i).getImage()!=null){
-            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege/"+menuItemsList.get(i).getImage())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(i).getImage())){
                 Picasso.with(context)
-                        .load("https://storage.googleapis.com/ndege/"+menuItemsList.get(i).getImage())
+                        .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(i).getImage())
                         .into(myViewHolder.image);
                 myViewHolder.image.setVisibility(View.VISIBLE);
             } else {

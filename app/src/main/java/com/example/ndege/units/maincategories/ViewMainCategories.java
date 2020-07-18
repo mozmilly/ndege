@@ -97,7 +97,7 @@ public class ViewMainCategories extends AppCompatActivity implements MainCategor
             }
         });
 
-        unitInterface.get_sub_core_cat_menu_items(getIntent().getIntExtra("id", 0), currentPage).enqueue(new Callback<List<MenuItems>>() {
+        unitInterface.get_sub_core_cat_menu_items(getIntent().getIntExtra("id", 0), currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
             @Override
             public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
                 if (response.code()==200){
@@ -185,7 +185,7 @@ public class ViewMainCategories extends AppCompatActivity implements MainCategor
                 ProgressBar progressBar = findViewById(R.id.this_progress_bar);
                 progressBar.setVisibility(View.VISIBLE);
                 unitInterface = ApiUtils.getUnitService();
-                unitInterface.get_sub_core_cat_menu_items(getIntent().getIntExtra("id", 0), currentPage).enqueue(new Callback<List<MenuItems>>() {
+                unitInterface.get_sub_core_cat_menu_items(getIntent().getIntExtra("id", 0), currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
                     @Override
                     public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
                         if (response.code() == 200) {

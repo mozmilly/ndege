@@ -12,6 +12,7 @@ import android.view.Window;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;

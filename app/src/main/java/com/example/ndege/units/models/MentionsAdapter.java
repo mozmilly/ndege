@@ -66,9 +66,9 @@ public class MentionsAdapter extends RecyclerView.Adapter<MentionsAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         if (mentionList.get(i).getImage()!=null){
-            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege/"+mentionList.get(i).getImage())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+mentionList.get(i).getImage())){
                 Picasso.with(context)
-                        .load("https://storage.googleapis.com/ndege/"+mentionList.get(i).getImage())
+                        .load("https://storage.googleapis.com/ndege_app/"+mentionList.get(i).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(myViewHolder.image);
                 myViewHolder.image.setVisibility(View.VISIBLE);
