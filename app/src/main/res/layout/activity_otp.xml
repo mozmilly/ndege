@@ -92,6 +92,7 @@
         android:gravity="center"
         android:hint="CODE"
         android:inputType="textMultiLine"
+        android:textColor="@color/black"
         android:textColorHint="@android:color/black"
         tools:layout_editor_absoluteX="85dp"
         tools:layout_editor_absoluteY="57dp" />
