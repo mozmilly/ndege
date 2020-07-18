@@ -63,7 +63,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".login.NdegeTermsActivity"></activity>
+        <activity android:name=".login.NdegeTermsActivity" />
     </application>
 
 </manifest>
