@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Order List"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"
                 android:layout_marginLeft="10sp"
@@ -175,7 +175,7 @@
                             android:textSize="15dp"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:text="Select pickup station"
+                            android:text="Select Drop Location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 

@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context=".login.otp.PhoneNumberActivity">
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,14 +19,14 @@
             android:layout_height="309dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/enjoy" />
+            app:srcCompat="@drawable/stack" />
     </LinearLayout>
 
 
 
     <LinearLayout
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="350dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

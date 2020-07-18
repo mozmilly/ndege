@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="#ddd"
     tools:context=".units.NewArrivalActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Arrivals"
-        android:textSize="30dp"
-        />
-    <androidx.recyclerview.widget.RecyclerView
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white" />
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/view_all_new_arrivals"
-        />
+        android:layout_marginLeft="10dp"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Arrivals"
+            android:fontFamily="@font/semibold"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            />
+    </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_all_new_arrivals"
+            />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

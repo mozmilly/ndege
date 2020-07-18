@@ -4,23 +4,33 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,10 +47,15 @@ import com.example.ndege.units.corecategories.ViewCoreCategories;
 import com.example.ndege.units.interfaces.UnitInterface;
 import com.example.ndege.units.models.ExtraField;
 import com.example.ndege.units.models.ExtraFieldsAdapter;
+import com.example.ndege.units.models.ExtraPrice;
 import com.example.ndege.units.models.ImagePagerAdapter;
 import com.example.ndege.units.models.MenuItems;
 import com.example.ndege.units.models.MyCart;
 import com.example.ndege.units.models.PortfolioImage;
+import com.example.ndege.units.product_reviews.interfaces.ProductReviewInterface;
+import com.example.ndege.units.product_reviews.models.ProductRating;
+import com.example.ndege.units.product_reviews.models.ProductReview;
+import com.example.ndege.units.product_reviews.models.ProductReviewAdapter;
 import com.example.ndege.utils.ApiUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -56,8 +71,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewLargerImageActivity extends AppCompatActivity {
-    TextView name, description, price, no_of_pieces, available;
+public class ViewLargerImageActivity extends AppCompatActivity implements View.OnTouchListener {
+
+    //    Zoom
+    private static final String TAG = "Touch";
+    @SuppressWarnings("unused")
+    private static final float MIN_ZOOM = 1f,MAX_ZOOM = 1f;
+
+    // These matrices will be used to scale points of the image
+    Matrix matrix = new Matrix();
+    Matrix savedMatrix = new Matrix();
+
+    // The 3 states (events) which the user is trying to perform
+    static final int NONE = 0;
+    static final int DRAG = 1;
+    static final int ZOOM = 2;
+    int mode = NONE;
+
+    // these PointF objects are used to record the point(s) the user is touching
+    PointF start = new PointF();
+    PointF mid = new PointF();
+    float oldDist = 1f;
+
+    /** Called when the activity is first created. */
+
+
+
+    TextView name, description, price, no_of_pieces, available, noComments;
     Button addToCart, sendInquiry, whatsapp;
     SharedPreferences sharedPreferences;
     Gson gson = new Gson();
@@ -97,16 +137,22 @@ public class ViewLargerImageActivity extends AppCompatActivity {
     // very frequently.
     private int mShortAnimationDuration;
 
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, mine_recycler;
     ExtraFieldsAdapter extraFieldsAdapter;
+    RatingBar ratingBar;
+    TextView rating;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_larger_image);
 
         recyclerView = findViewById(R.id.extra_fields_recycler);
+        mine_recycler = findViewById(R.id.product_reviews);
 
         parent = findViewById(R.id.viewPagerParent);
+
+        ratingBar = findViewById(R.id.my_rating_bar);
+        rating = findViewById(R.id.my_rating);
 
 
         viewPager =  findViewById(R.id.viewPagerMI);
@@ -123,16 +169,38 @@ public class ViewLargerImageActivity extends AppCompatActivity {
         available = findViewById(R.id.large_image_available);
         available.setVisibility(View.GONE);
         ImageView imageView = findViewById(R.id.my_large_image);
-
-
+        noComments = findViewById(R.id.no_comments_alert);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    zoomImageFromThumb(imageView, ((BitmapDrawable) imageView.getDrawable()).getBitmap());
-                }
+            public void onClick(View v) {
+                Dialog builder = new Dialog(ViewLargerImageActivity.this, android.R.style.Theme_Light);
+                builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                builder.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        //nothing;
+                    }
+                });
+
+                ImageView imageView = new ImageView(ViewLargerImageActivity.this);
+
+                imageView.setOnTouchListener(ViewLargerImageActivity.this);
+
+                Glide.with(ViewLargerImageActivity.this)
+                        .load("https://storage.googleapis.com/ndege/"+getIntent().getStringExtra("image"))
+                        .into(imageView);
+                builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                builder.show();
+
             }
         });
+
+
+
 
         // Retrieve and cache the system's default "short" animation time.
         mShortAnimationDuration = getResources().getInteger(
@@ -142,6 +210,48 @@ public class ViewLargerImageActivity extends AppCompatActivity {
         MenuItems menuItems = ViewCoreCategories.getMenuItems();
 
         UnitInterface unitInterface = ApiUtils.getUnitService();
+
+        ProductReviewInterface productReviewInterface = ApiUtils.get_product_review_service();
+
+        productReviewInterface.get_product_rating(menuItems.getId()).enqueue(new Callback<ProductRating>() {
+            @Override
+            public void onResponse(Call<ProductRating> call, Response<ProductRating> response) {
+                if (response.code()==200){
+//                    Toast.makeText(ViewLargerImageActivity.this, String.valueOf(response.body()), Toast.LENGTH_SHORT).show();
+                    ratingBar.setRating(response.body().getPoints__avg());
+                    rating.setText(String.valueOf(response.body().getPoints__avg()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductRating> call, Throwable t) {
+
+            }
+        });
+
+
+        productReviewInterface.get_all_product_reviews(menuItems.getId()).enqueue(new Callback<List<ProductReview>>() {
+            @Override
+            public void onResponse(Call<List<ProductReview>> call, Response<List<ProductReview>> response) {
+                if (response.code()==200){
+                    ProductReviewAdapter productReviewAdapter = new ProductReviewAdapter(response.body(), ViewLargerImageActivity.this);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    mine_recycler.setLayoutManager(mLayoutManager);
+                    mine_recycler.setItemAnimator(new DefaultItemAnimator());
+                    mine_recycler.setAdapter(productReviewAdapter);
+                    noComments.setVisibility(View.GONE);
+                    if (response.body().isEmpty()){
+                        noComments.setVisibility(View.VISIBLE);
+                        noComments.setText("No Comments");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductReview>> call, Throwable t) {
+
+            }
+        });
 
 
         whatsapp.setOnClickListener(new View.OnClickListener() {
@@ -264,14 +374,32 @@ public class ViewLargerImageActivity extends AppCompatActivity {
             }
         });
         Glide.with(ViewLargerImageActivity.this)
-                .load("https://bombaservices.pythonanywhere.com"+getIntent().getStringExtra("image"))
+                .load("https://storage.googleapis.com/ndege/"+getIntent().getStringExtra("image"))
                 .into(imageView);
 
         if (Objects.requireNonNull(getIntent().getStringExtra("menu_item")).equalsIgnoreCase("true")){
 
             name.setText(("Product Name: "+menuItems.getItem_name()));
             description.setText(menuItems.getDescription());
-            price.setText(("Price: Ksh."+menuItems.getPrice()));
+            unitInterface = ApiUtils.getUnitService();
+            unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+                @Override
+                public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                    if (response.code()==200){
+                        for (ExtraPrice extraPrice: response.body()){
+                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                price.setText(String.valueOf("Ksh."+(menuItems.getPrice()+extraPrice.getAmount())));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
+
+                }
+            });
+
             no_of_pieces.setText(("Min Order: "+menuItems.getMinimum_order()));
             available.setText(("Available: "+menuItems.getItems_in_stock()));
 
@@ -561,5 +689,132 @@ public class ViewLargerImageActivity extends AppCompatActivity {
                 mCurrentAnimator = set;
             }
         });
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        ImageView view = (ImageView) v;
+        view.setScaleType(ImageView.ScaleType.MATRIX);
+        float scale;
+
+        dumpEvent(event);
+        // Handle touch events here...
+
+        switch (event.getAction() & MotionEvent.ACTION_MASK)
+        {
+            case MotionEvent.ACTION_DOWN:   // first finger down only
+                savedMatrix.set(matrix);
+                start.set(event.getX(), event.getY());
+                Log.d(TAG, "mode=DRAG"); // write to LogCat
+                mode = DRAG;
+                break;
+
+            case MotionEvent.ACTION_UP: // first finger lifted
+
+            case MotionEvent.ACTION_POINTER_UP: // second finger lifted
+
+                mode = NONE;
+                Log.d(TAG, "mode=NONE");
+                break;
+
+            case MotionEvent.ACTION_POINTER_DOWN: // first and second finger down
+
+                oldDist = spacing(event);
+                Log.d(TAG, "oldDist=" + oldDist);
+                if (oldDist > 5f) {
+                    savedMatrix.set(matrix);
+                    midPoint(mid, event);
+                    mode = ZOOM;
+                    Log.d(TAG, "mode=ZOOM");
+                }
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+
+                if (mode == DRAG)
+                {
+                    matrix.set(savedMatrix);
+                    matrix.postTranslate(event.getX() - start.x, event.getY() - start.y); // create the transformation in the matrix  of points
+                }
+                else if (mode == ZOOM)
+                {
+                    // pinch zooming
+                    float newDist = spacing(event);
+                    Log.d(TAG, "newDist=" + newDist);
+                    if (newDist > 5f)
+                    {
+                        matrix.set(savedMatrix);
+                        scale = newDist / oldDist; // setting the scaling of the
+                        // matrix...if scale > 1 means
+                        // zoom in...if scale < 1 means
+                        // zoom out
+                        matrix.postScale(scale, scale, mid.x, mid.y);
+                    }
+                }
+                break;
+        }
+
+        view.setImageMatrix(matrix); // display the transformation on screen
+
+        return true; // indicate event was handled
+    }
+
+    /*
+     * --------------------------------------------------------------------------
+     * Method: spacing Parameters: MotionEvent Returns: float Description:
+     * checks the spacing between the two fingers on touch
+     * ----------------------------------------------------
+     */
+
+    private float spacing(MotionEvent event)
+    {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    /*
+     * --------------------------------------------------------------------------
+     * Method: midPoint Parameters: PointF object, MotionEvent Returns: void
+     * Description: calculates the midpoint between the two fingers
+     * ------------------------------------------------------------
+     */
+
+    private void midPoint(PointF point, MotionEvent event)
+    {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        point.set(x / 2, y / 2);
+    }
+
+    /** Show an event in the LogCat view, for debugging */
+    private void dumpEvent(MotionEvent event)
+    {
+        String names[] = { "DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE","POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?" };
+        StringBuilder sb = new StringBuilder();
+        int action = event.getAction();
+        int actionCode = action & MotionEvent.ACTION_MASK;
+        sb.append("event ACTION_").append(names[actionCode]);
+
+        if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP)
+        {
+            sb.append("(pid ").append(action >> MotionEvent.ACTION_POINTER_ID_SHIFT);
+            sb.append(")");
+        }
+
+        sb.append("[");
+        for (int i = 0; i < event.getPointerCount(); i++)
+        {
+            sb.append("#").append(i);
+            sb.append("(pid ").append(event.getPointerId(i));
+            sb.append(")=").append((int) event.getX(i));
+            sb.append(",").append((int) event.getY(i));
+            if (i + 1 < event.getPointerCount())
+                sb.append(";");
+        }
+
+        sb.append("]");
+        Log.d("Touch Events ---------", sb.toString());
     }
 }

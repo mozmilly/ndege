@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/help_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/help_title"
+        android:textSize="25dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/help_content"
+        android:textSize="21dp"
+        android:maxLength="300"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/read_more_text"
+        android:text="Read More..."
+        android:textColor="@color/blue_A700"
+        android:layout_margin="10dp"
+        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:layout_gravity="center_horizontal|center_vertical" >
+        <ImageView
+            android:id="@+id/imageViewItem"
+            android:layout_width="match_parent"
+            android:layout_height="201dp"
+            android:scaleType="centerCrop"
+            />
+        <ImageView
+            android:id="@+id/btnPlay"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:visibility="visible"
+            android:src="@drawable/play"
+            />
+    </FrameLayout>
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/youtube_player"
+        />
+</LinearLayout>

@@ -25,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.example.ndege.R;
 import com.example.ndege.units.ViewLargerImageActivity;
 import com.example.ndege.units.corecategories.ViewCoreCategories;
+import com.example.ndege.units.interfaces.UnitInterface;
+import com.example.ndege.utils.ApiUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +38,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.http.Url;
 
 public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyViewHolder> {
@@ -46,6 +51,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
     String variableString = "";
     Boolean header = false;
 
+    private boolean isLoaderVisible = false;
     //declare interface
     private OnItemClicked onClick;
 
@@ -71,7 +77,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
         public ImageView image;
         RelativeLayout parent;
         LinearLayout parent_image;
-        Button whatsapp;
+        Button whatsapp, general;
 
         public MyViewHolder(View view) {
             super(view);
@@ -87,6 +93,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
             parent_image = view.findViewById(R.id.image_parent);
             whatsapp = view.findViewById(R.id.share_portfolio);
             min_order = view.findViewById(R.id.min_order);
+            general = view.findViewById(R.id.general_share);
             image.setDrawingCacheEnabled(true);
         }
 
@@ -106,9 +113,9 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             if (menuItemsList.get(position).getImage()!=null){
-                if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())){
+                if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege/"+menuItemsList.get(position).getImage())){
                     Glide.with(context)
-                            .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())
+                            .load("https://storage.googleapis.com/ndege/"+menuItemsList.get(position).getImage())
                             .into(holder.image);
                     holder.image.setVisibility(View.VISIBLE);
                 }
@@ -118,7 +125,24 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             holder.name.setText(menuItemsList.get(position).getItem_name());
-            holder.price.setText(String.valueOf("Ksh."+menuItemsList.get(position).getPrice()));
+            UnitInterface unitInterface = ApiUtils.getUnitService();
+            unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+                @Override
+                public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                    if (response.code()==200){
+                        for (ExtraPrice extraPrice: response.body()){
+                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
+
+                }
+            });
             holder.min_order.setText(("Atleast "+menuItemsList.get(position).getMinimum_order()+" items"));
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -166,6 +190,29 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                 }
             });
 
+            holder.general.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Drawable drawable = holder.image.getDrawable();
+                    BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
+                    Bitmap bitmap = bitmapDrawable .getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+                    String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+
+                    Uri imgUri = Uri.parse(path);
+                    Intent general = new Intent(Intent.ACTION_SEND);
+                    general.setType("text/plain");
+                    general.putExtra(Intent.EXTRA_TEXT, menuItemsList.get(position).getItem_name()+"\n"+menuItemsList.get(position).getDescription());
+                    general.putExtra(Intent.EXTRA_STREAM, imgUri);
+                    general.setType("image/jpeg");
+                    general.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    Intent shareIntent = Intent.createChooser(general, null);
+                    context.startActivity(shareIntent);
+                }
+            });
+
         }
 
 
@@ -191,5 +238,33 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
         menuItemsList = list;
         notifyDataSetChanged();
     }
+
+
+    public void addItems(List<MenuItems> postItems) {
+        menuItemsList.addAll(postItems);
+        notifyDataSetChanged();
+    }
+    public void addLoading() {
+        isLoaderVisible = true;
+
+    }
+    public void removeLoading() {
+        isLoaderVisible = false;
+        int position = menuItemsList.size() - 1;
+        MenuItems item = getItem(position);
+        if (item != null) {
+            menuItemsList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+    public void clear() {
+        menuItemsList.clear();
+        notifyDataSetChanged();
+    }
+
+    MenuItems getItem(int position) {
+        return menuItemsList.get(position);
+    }
+
 
 }
