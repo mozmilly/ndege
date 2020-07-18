@@ -11,7 +11,7 @@ import com.example.ndege.units.interfaces.UnitInterface;
 
 public class ApiUtils {
     private ApiUtils() {}
-    public static final String BASE_URL = "http://bombaservices.pythonanywhere.com/";
+    public static final String BASE_URL = "http://ndege.pythonanywhere.com/";
 
     public static LoginInterface getLoginService(){
         return RetrofitClient.getClient(BASE_URL).create(LoginInterface.class);
