@@ -122,9 +122,9 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             if (menuItemsList.get(position).getImage()!=null){
-                if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())){
+                if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())){
                     Glide.with(context)
-                            .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())
+                            .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
                             .into(holder.image);
                     holder.image.setVisibility(View.VISIBLE);
                 }
@@ -194,7 +194,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 //                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
                         Picasso.with(context)
-                                .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())
+                                .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
                                 .into(new Target() {
                                     @Override
                                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -239,7 +239,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                     Drawable drawable = holder.image.getDrawable();
 
                     Picasso.with(context)
-                            .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(position).getImage())
+                            .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
                             .into(new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {

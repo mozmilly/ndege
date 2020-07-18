@@ -418,14 +418,13 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 if (extraPrice.getName().equalsIgnoreCase("Supermarket")) {
                                     ndege_extra = extraPrice.getAmount();
 
-                                    double price = 0;
-                                    for (MyCart myCart : arrayList) {
-                                        price = myCart.getQuantity() * (myCart.getMenuItems().getPrice() + ndege_extra);
-                                        total_fee += price;
-                                    }
-
-                                    TextView tv = findViewById(R.id.check_out_items_fee);
-                                    tv.setText(String.valueOf("Ksh." + (total_fee + margin)));
+                                double price = 0;
+                                for (MyCart myCart : arrayList) {
+                                    price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+ndege_extra);
+                                    total_fee += price;
+                                }
+                                TextView tv = findViewById(R.id.check_out_items_fee);
+                                tv.setText(String.valueOf("Ksh."+(total_fee+margin)));
 
                                 }
                             }

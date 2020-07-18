@@ -64,9 +64,9 @@ public class NewArrivalsAdapter extends RecyclerView.Adapter<NewArrivalsAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
 //        if (menuItemsList.get(i).getImage()!=null){
-        if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+menuItemsList.get(i).getImage())){
+        if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(i).getImage())){
             Glide.with(context)
-                    .load("https://bombaservices.pythonanywhere.com"+menuItemsList.get(i).getImage())
+                    .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(i).getImage())
                     .into(myViewHolder.image);
             myViewHolder.image.setVisibility(View.VISIBLE);
         }

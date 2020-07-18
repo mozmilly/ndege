@@ -198,13 +198,12 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 imageView.setOnTouchListener(ViewLargerImageActivity.this);
 
                 Glide.with(ViewLargerImageActivity.this)
-                        .load("https://bombaservices.pythonanywhere.com"+getIntent().getStringExtra("image"))
+                        .load("https://storage.googleapis.com/ndege_app/"+getIntent().getStringExtra("image"))
                         .into(imageView);
                 builder.addContentView(imageView, new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
                 builder.show();
-
             }
         });
 
@@ -270,7 +269,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
                 Bitmap bitmap = bitmapDrawable .getBitmap();
                 Picasso.with(ViewLargerImageActivity.this)
-                        .load("https://bombaservices.pythonanywhere.com"+menuItems.getImage())
+                        .load(""+menuItems.getImage())
                         .into(new Target() {
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -399,7 +398,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
             }
         });
         Glide.with(ViewLargerImageActivity.this)
-                .load("https://bombaservices.pythonanywhere.com"+getIntent().getStringExtra("image"))
+                .load("https://storage.googleapis.com/ndege_app/"+getIntent().getStringExtra("image"))
                 .into(imageView);
 
         if (Objects.requireNonNull(getIntent().getStringExtra("menu_item")).equalsIgnoreCase("true")){

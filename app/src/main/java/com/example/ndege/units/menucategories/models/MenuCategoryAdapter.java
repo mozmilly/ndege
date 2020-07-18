@@ -78,9 +78,9 @@ public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapte
         });
 
         if (menuCategoryList.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+menuCategoryList.get(position).getImage())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+menuCategoryList.get(position).getImage())){
                 Picasso.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+menuCategoryList.get(position).getImage())
+                        .load("https://storage.googleapis.com/ndege_app/"+menuCategoryList.get(position).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(holder.imageView);
             }

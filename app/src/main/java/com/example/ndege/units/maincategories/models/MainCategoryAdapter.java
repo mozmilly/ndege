@@ -77,9 +77,9 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<MainCategoryAdapte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         if (mainCategoryList.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+mainCategoryList.get(position).getImage())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+mainCategoryList.get(position).getImage())){
                 Picasso.with(context)
-                        .load("https://bombaservices.pythonanywhere.com"+mainCategoryList.get(position).getImage())
+                        .load("https://storage.googleapis.com/ndege_app/"+mainCategoryList.get(position).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(holder.imageView);
             }

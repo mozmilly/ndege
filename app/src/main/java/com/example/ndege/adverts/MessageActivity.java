@@ -32,9 +32,9 @@ public class MessageActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.message_image);
 
         if (advert.getMy_image()!=null){
-            if (URLUtil.isValidUrl("https://bombaservices.pythonanywhere.com"+advert.getMy_image())){
+            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+advert.getMy_image())){
                 Picasso.with(MessageActivity.this)
-                        .load("https://bombaservices.pythonanywhere.com"+advert.getMy_image())
+                        .load("https://storage.googleapis.com/ndege_app/"+advert.getMy_image())
                         .placeholder(R.drawable.place_holder)
                         .into(imageView);
                 imageView.setVisibility(View.VISIBLE);
