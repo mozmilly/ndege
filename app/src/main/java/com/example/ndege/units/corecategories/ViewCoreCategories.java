@@ -414,27 +414,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     menuItemAdapter.setOnClick(ViewCoreCategories.this);
                     menuItemAdapter.notifyDataSetChanged();
                     menuItemRecycler.setHasFixedSize(true);
-                    menuItemRecycler.addOnScrollListener(new PaginationListener(staggeredGridLayoutManager, recyclerView, parent) {
-                        @Override
-                        protected void loadMoreItems() {
-                            isLoading = true;
-                            currentPage++;
-                            doApiCall();
-
-
-
-                        }
-
-                        @Override
-                        public boolean isLastPage() {
-                            return isLastPage;
-                        }
-
-                        @Override
-                        public boolean isLoading() {
-                            return isLoading;
-                        }
-                    });
 
                 }
             }
