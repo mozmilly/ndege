@@ -32,9 +32,9 @@ public class MessageActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.message_image);
 
         if (advert.getMy_image()!=null){
-            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+advert.getMy_image())){
+            if (URLUtil.isValidUrl(advert.getMy_image())){
                 Picasso.with(MessageActivity.this)
-                        .load("https://storage.googleapis.com/ndege_app/"+advert.getMy_image())
+                        .load(advert.getMy_image())
                         .placeholder(R.drawable.place_holder)
                         .into(imageView);
                 imageView.setVisibility(View.VISIBLE);
@@ -43,7 +43,7 @@ public class MessageActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.advert_title);
         title.setText(advert.getTitle());
         TextView long_des = findViewById(R.id.advert_description_long);
-        long_des.setText(advert.getLong_description());
+        long_des.setText(advert.getText());
 
 
     }

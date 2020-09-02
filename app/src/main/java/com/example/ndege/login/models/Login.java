@@ -10,6 +10,9 @@ public class Login {
     @SerializedName("password")
     @Expose
     private String password;
+    @SerializedName("email")
+    @Expose
+    private String email;
 
     @SerializedName("is_ndege_reseller")
     @Expose
@@ -37,5 +40,13 @@ public class Login {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

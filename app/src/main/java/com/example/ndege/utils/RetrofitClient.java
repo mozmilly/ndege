@@ -11,7 +11,7 @@ public class RetrofitClient {
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
 
-    public static final String BASE_URL = "http://ndege.pythonanywhere.com/";
+    public static final String BASE_URL = "https://ndegeserver.pythonanywhere.com/";
 
 
     public static Retrofit getClient(String baseUrl) {

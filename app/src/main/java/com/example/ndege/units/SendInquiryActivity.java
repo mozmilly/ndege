@@ -52,7 +52,7 @@ public class SendInquiryActivity extends AppCompatActivity {
 
                 SharedPreferences sp = getSharedPreferences("pref", 0);
                 String username = sp.getString("user", "no user");
-                InquiryInterface inquiryInterface = ApiUtils.getInquiryService();
+                InquiryInterface inquiryInterface = ApiUtils.getInquiryService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
                 if (Objects.requireNonNull(getIntent().getStringExtra("name")).equalsIgnoreCase("response")){
                     inquiryInterface.send_inquiry(username, getIntent().getStringExtra("recipient"), title.getText().toString(),

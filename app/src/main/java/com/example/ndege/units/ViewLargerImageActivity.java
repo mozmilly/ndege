@@ -140,7 +140,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
     // very frequently.
     private int mShortAnimationDuration;
 
-    RecyclerView recyclerView, mine_recycler;
+    RecyclerView  mine_recycler;
     ExtraFieldsAdapter extraFieldsAdapter;
     RatingBar ratingBar;
     TextView rating;
@@ -149,7 +149,6 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_larger_image);
 
-        recyclerView = findViewById(R.id.extra_fields_recycler);
         mine_recycler = findViewById(R.id.product_reviews);
 
         parent = findViewById(R.id.viewPagerParent);
@@ -198,7 +197,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 imageView.setOnTouchListener(ViewLargerImageActivity.this);
 
                 Glide.with(ViewLargerImageActivity.this)
-                        .load("https://storage.googleapis.com/ndege_app/"+getIntent().getStringExtra("image"))
+                        .load(getIntent().getStringExtra("image"))
                         .into(imageView);
                 builder.addContentView(imageView, new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -217,9 +216,9 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
 
         MenuItems menuItems = ViewCoreCategories.getMenuItems();
 
-        UnitInterface unitInterface = ApiUtils.getUnitService();
+        UnitInterface unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
-        ProductReviewInterface productReviewInterface = ApiUtils.get_product_review_service();
+        ProductReviewInterface productReviewInterface = ApiUtils.get_product_review_service(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
         productReviewInterface.get_product_rating(menuItems.getId()).enqueue(new Callback<ProductRating>() {
             @Override
@@ -269,7 +268,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
                 Bitmap bitmap = bitmapDrawable .getBitmap();
                 Picasso.with(ViewLargerImageActivity.this)
-                        .load("https://storage.googleapis.com/ndege_app/"+getIntent().getStringExtra("image"))
+                        .load(getIntent().getStringExtra("image"))
                         .into(new Target() {
                             @Override
                             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -303,25 +302,6 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                         });
 
 
-
-            }
-        });
-
-        unitInterface.get_extra_fields(menuItems.getId()).enqueue(new Callback<List<ExtraField>>() {
-            @Override
-            public void onResponse(Call<List<ExtraField>> call, Response<List<ExtraField>> response) {
-                if (response.code()==200){
-                    extraFieldsAdapter = new ExtraFieldsAdapter(response.body(), ViewLargerImageActivity.this);
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    recyclerView.setLayoutManager(mLayoutManager);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(extraFieldsAdapter);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<ExtraField>> call, Throwable t) {
 
             }
         });
@@ -398,14 +378,14 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
             }
         });
         Glide.with(ViewLargerImageActivity.this)
-                .load("https://storage.googleapis.com/ndege_app/"+getIntent().getStringExtra("image"))
+                .load(getIntent().getStringExtra("image"))
                 .into(imageView);
 
         if (Objects.requireNonNull(getIntent().getStringExtra("menu_item")).equalsIgnoreCase("true")){
 
             name.setText(("Product Name: "+menuItems.getItem_name()));
             description.setText(menuItems.getDescription());
-            unitInterface = ApiUtils.getUnitService();
+            unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
             unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
                 @Override
                 public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
@@ -420,7 +400,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
                         } else {
                             whatsapp.setVisibility(View.GONE);
                             for (ExtraPrice extraPrice: response.body()){
-                                if (extraPrice.getName().equalsIgnoreCase("Supermarket")){
+                                if (extraPrice.getName().equalsIgnoreCase("Retailer")){
                                     price.setText(String.valueOf("Ksh."+(menuItems.getPrice()+extraPrice.getAmount())));
                                 }
                             }

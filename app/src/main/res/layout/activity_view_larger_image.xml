@@ -93,18 +93,13 @@
                         android:layout_marginTop="10dp"
                         android:textSize="20sp"
                         android:id="@+id/large_image_price"
-                        android:text="Ksh600-Ksh900"
+                        android:text="Ksh"
                         android:textStyle="bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
 
-                    <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="17sp"
-                        android:text="Order Amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+
 
                     <TextView
                         android:layout_marginTop="5dp"
@@ -129,7 +124,6 @@
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:id="@+id/large_image_description"
-                        android:text="Ultra 4K HD #4096*2160pixel# Android 9.0 tv box H96 MAX RK3318 android tv box 4gb ram 32gb rom OTT tv box quad core "
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
@@ -179,11 +173,6 @@
                         android:id="@+id/large_image_available"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/extra_fields_recycler"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

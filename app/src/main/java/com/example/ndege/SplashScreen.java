@@ -43,7 +43,7 @@ public class SplashScreen extends AppCompatActivity {
                 if (sp.getInt("PREFERENCES_LOGIN", 0)==1){
 
                     LoginInterface loginInterface = ApiUtils.getLoginService();
-                    loginInterface.perform_login(sp.getString("user", "none"), "").enqueue(new Callback<Login>() {
+                    loginInterface.perform_login(sp.getString("user", "none"), "1234").enqueue(new Callback<Login>() {
                         @Override
                         public void onResponse(Call<Login> call, Response<Login> response) {
                             if (response.code()==200){
@@ -51,6 +51,7 @@ public class SplashScreen extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sp.edit();
                                 Toast.makeText(SplashScreen.this, String.valueOf(response.body().isIs_ndege_reseller()), Toast.LENGTH_SHORT).show();
                                 editor.putBoolean("is_ndege_reseller", response.body().isIs_ndege_reseller());
+                                editor.putString("email", response.body().getEmail());
                                 editor.putBoolean("selected_type", true);
                                 editor.apply();
                                 Intent mainIntent = new Intent(SplashScreen.this, ViewCoreCategories.class);
@@ -83,11 +84,8 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
-            Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
-            startActivity(intent);
-        }
-        return true;
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
     }
 }

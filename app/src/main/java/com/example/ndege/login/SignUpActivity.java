@@ -27,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private Spinner spinner;
     private EditText editText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +35,14 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         EditText fullname = findViewById(R.id.full_name_signup);
-       // EditText username = findViewById(R.id.username_signup);
+        // EditText username = findViewById(R.id.username_signup);
         //username.setVisibility(View.GONE);
-       // EditText password = findViewById(R.id.password_signup);
+        // EditText password = findViewById(R.id.password_signup);
         //EditText confirm_password = findViewById(R.id.confirm_password_signup);
-       // password.setVisibility(View.GONE);
+        // password.setVisibility(View.GONE);
         //confirm_password.setVisibility(View.GONE);
         EditText email = findViewById(R.id.email_signup);
-        EditText ref_code = findViewById(R.id.ref_code);
+        EditText town1 = findViewById(R.id.ref_code);
 
         Button signUp = findViewById(R.id.sign_up);
         TextView login = findViewById(R.id.sign_in);
@@ -52,17 +53,16 @@ public class SignUpActivity extends AppCompatActivity {
                 signUpInterface = ApiUtils.getSignUpService();
                 String full_name = fullname.getText().toString();
                 String email1 = email.getText().toString();
-                String refCode = ref_code.getText().toString();
+                String town = town1.getText().toString();
 
-                if (email1.length()>9){
-                    signUpPost(full_name, getIntent().getStringExtra("pNumber"), "1234", "1234", email1, refCode);
+                if (email1.length() > 9) {
+                    signUpPost(full_name, getIntent().getStringExtra("pNumber"),"1234", email1, town);
                 } else {
-                    if (email.length()<4){
+                    if (email.length() < 4) {
                         Toast.makeText(SignUpActivity.this, "Your email seems to be invalid!!", Toast.LENGTH_SHORT).show();
                     }
 
                 }
-
 
 
             }
@@ -77,12 +77,12 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    public void signUpPost(String full_name, String username, String password, String confirmPassword, String email, String ref_code){
-        signUpInterface.sign_up(full_name ,username, password, confirmPassword, email, ref_code).enqueue(new Callback<SignUp>() {
+    public void signUpPost(String full_name, String username, String password, String email, String town) {
+        signUpInterface.sign_up(full_name, username, password, email, town).enqueue(new Callback<SignUp>() {
             @Override
             public void onResponse(Call<SignUp> call, Response<SignUp> response) {
                 Intent intent = new Intent(SignUpActivity.this, ViewCoreCategories.class);
-                if (response.code()==300){
+                if (response.code() == 200) {
                     Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
 
@@ -99,6 +99,4 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

@@ -131,7 +131,7 @@ public class EnquireItemActivity extends AppCompatActivity implements EasyPermis
                     RequestBody sender = RequestBody.create(MediaType.parse("text/plain"), username);
                     RequestBody recipient = RequestBody.create(MediaType.parse("text/plain"), "0753540580");
 
-                    InquiryInterface inquiryInterface = ApiUtils.getInquiryService();
+                    InquiryInterface inquiryInterface = ApiUtils.getInquiryService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
                     inquiryInterface.send_enquiry(fileToUpload, filename, sender, recipient, this_title, this_details).enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {

@@ -36,7 +36,7 @@ public class CommentOnProduct extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("pref", 0);
         String username = sp.getString("user", "no user");
 
-        ProductReviewInterface productReviewInterface = ApiUtils.get_product_review_service();
+        ProductReviewInterface productReviewInterface = ApiUtils.get_product_review_service(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override

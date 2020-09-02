@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +43,7 @@ import com.example.ndege.adverts.models.Advert;
 import com.example.ndege.adverts.models.AdvertAdapter;
 import com.example.ndege.help.HelpActivity;
 import com.example.ndege.login.NdegeTermsActivity;
+import com.example.ndege.login.ProfileActivity;
 import com.example.ndege.login.interfaces.LoginInterface;
 import com.example.ndege.login.models.Login;
 import com.example.ndege.tokens.interfaces.TokenInterface;
@@ -62,6 +64,7 @@ import com.example.ndege.utils.ApiUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -159,16 +162,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         sliderDotspanel = findViewById(R.id.SliderDotsCC);
         parent = findViewById(R.id.viewPagerParentCC);
 
-        help = findViewById(R.id.floating_action_button);
-
-        help.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ViewCoreCategories.this, HelpActivity.class);
-                startActivity(intent);
-            }
-        });
-
         SharedPreferences sp=getSharedPreferences("pref",0);
         if (!sp.getBoolean("selected_type", false)){
             getChooseType();
@@ -189,7 +182,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
 
-                        TokenInterface tokenInterface = ApiUtils.getTokenService();
+                        TokenInterface tokenInterface = ApiUtils.getTokenService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
                         SharedPreferences sp = getSharedPreferences("pref", 0);
                         String username = sp.getString("user", "no user");
                         tokenInterface.store_token(username, token, "Ndege").enqueue(new Callback<TokenModel>() {
@@ -256,7 +249,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         mine_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UnitInterface unitInterface = ApiUtils.getUnitService();
+                UnitInterface unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
                 unitInterface.get_all_menuitems(search.getText().toString()).enqueue(new Callback<List<MenuItems>>() {
                     @Override
@@ -299,7 +292,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             }
         }
 
-        advertInteface = ApiUtils.get_advert_service();
+        advertInteface = ApiUtils.get_advert_service(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
+        Toast.makeText(this, getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"), Toast.LENGTH_SHORT).show();
         advertInteface.get_all_adverts().enqueue(new Callback<List<Advert>>() {
             @Override
             public void onResponse(Call<List<Advert>> call, Response<List<Advert>> response) {
@@ -378,8 +372,8 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             }
         });
 
-        unitInterface = ApiUtils.getUnitService();
-        unitInterface.get_all_core_categories("Ndege").enqueue(new Callback<List<CoreCategory>>() {
+        unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
+        unitInterface.get_all_core_categories().enqueue(new Callback<List<CoreCategory>>() {
             @Override
             public void onResponse(Call<List<CoreCategory>> call, Response<List<CoreCategory>> response) {
                 if (response.code()==200){
@@ -452,6 +446,26 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             }
         });
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.this_home:
+
+                    break;
+                case R.id.this_help:
+                    Intent intent = new Intent(ViewCoreCategories.this, HelpActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.profile:
+                    Intent intent1 = new Intent(ViewCoreCategories.this, ProfileActivity.class);
+                    startActivity(intent1);
+                    break;
+
+            }
+            return true;
+        });
+
+
 
 
 
@@ -523,7 +537,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             public void run() {
                 ProgressBar progressBar = findViewById(R.id.this_progress_bar);
                 progressBar.setVisibility(View.VISIBLE);
-                unitInterface = ApiUtils.getUnitService();
+                unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
                 unitInterface.get_all_menu_items(currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
                     @Override
                     public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
@@ -576,7 +590,7 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
     public void getChooseType(){
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        CharSequence items[] = new CharSequence[] {"Ndege Reseller", "Buyer"};
+        CharSequence items[] = new CharSequence[] {"Ndege Reseller", "Retailer"};
         adb.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
 
             @Override

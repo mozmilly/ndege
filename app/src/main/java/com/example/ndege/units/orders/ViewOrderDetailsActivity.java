@@ -60,7 +60,7 @@ public class ViewOrderDetailsActivity extends AppCompatActivity implements Order
         delivery_fee.setText(("Delivery Fee: "+myOrder.getTransportation_fee()));
         price.setText(("Items Price: "+myOrder.getPrice()));
 
-        OrderInterface orderInterface = ApiUtils.getOrderService();
+        OrderInterface orderInterface = ApiUtils.getOrderService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
         orderInterface.get_order_extra(myOrder.getId()).enqueue(new Callback<OrderExtra>() {
             @Override

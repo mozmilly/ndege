@@ -41,7 +41,7 @@ public class NewArrivalActivity extends AppCompatActivity implements NewArrivals
     }
 
     public void getNewArrivals(){
-        UnitInterface unitInterface = ApiUtils.getUnitService();
+        UnitInterface unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
         unitInterface.get_new_arrivals().enqueue(new Callback<List<MenuItems>>() {
             @Override
             public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {

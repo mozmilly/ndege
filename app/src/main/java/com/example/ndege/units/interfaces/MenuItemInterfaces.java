@@ -12,7 +12,7 @@ import retrofit2.http.POST;
 
 public interface MenuItemInterfaces {
     @FormUrlEncoded
-    @POST("units/get_menu_items/")
+    @POST("unit/get_menu_items/")
     Call<List<MenuItems>> get_menu_items(
             @Field("id") int id
     );

@@ -47,6 +47,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Url;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyViewHolder> {
     List<MenuItems> menuItemsList;
 
@@ -80,7 +82,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
         public TextView name, price, description, add, negotiable, stock, min_order;
         public ImageView image;
         RelativeLayout parent;
-        LinearLayout parent_image;
+        LinearLayout parent_image, share;
         Button whatsapp, general;
 
         public MyViewHolder(View view) {
@@ -99,11 +101,11 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
             min_order = view.findViewById(R.id.min_order);
             general = view.findViewById(R.id.general_share);
             image.setDrawingCacheEnabled(true);
-            if (context.getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)) {
-
+            share = view.findViewById(R.id.share_parent);
+            if (context.getSharedPreferences("pref", MODE_PRIVATE).getBoolean("is_ndege_reseller", false)) {
+                share.setVisibility(View.VISIBLE);
             } else {
-                whatsapp.setVisibility(View.GONE);
-                general.setVisibility(View.GONE);
+                share.setVisibility(View.GONE);
             }
         }
     }
@@ -122,9 +124,9 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             if (menuItemsList.get(position).getImage()!=null){
-                if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())){
+                if (URLUtil.isValidUrl(menuItemsList.get(position).getImage())){
                     Glide.with(context)
-                            .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
+                            .load(menuItemsList.get(position).getImage())
                             .into(holder.image);
                     holder.image.setVisibility(View.VISIBLE);
                 }
@@ -134,12 +136,12 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             holder.name.setText(menuItemsList.get(position).getItem_name());
-            UnitInterface unitInterface = ApiUtils.getUnitService();
+            UnitInterface unitInterface = ApiUtils.getUnitService(context.getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
             unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
                 @Override
                 public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
                     if (response.code()==200){
-                        if (context.getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
+                        if (context.getSharedPreferences("pref", MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
                             for (ExtraPrice extraPrice: response.body()){
 
                                 if (extraPrice.getName().equalsIgnoreCase("Ndege")){
@@ -151,7 +153,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                             holder.general.setVisibility(View.GONE);
                             for (ExtraPrice extraPrice: response.body()){
 
-                                if (extraPrice.getName().equalsIgnoreCase("Supermarket")){
+                                if (extraPrice.getName().equalsIgnoreCase("Retailer")){
                                     holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
                                 }
                             }
@@ -194,7 +196,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 //                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
                         Picasso.with(context)
-                                .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
+                                .load(menuItemsList.get(position).getImage())
                                 .into(new Target() {
                                     @Override
                                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -239,7 +241,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
                     Drawable drawable = holder.image.getDrawable();
 
                     Picasso.with(context)
-                            .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
+                            .load(menuItemsList.get(position).getImage())
                             .into(new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {

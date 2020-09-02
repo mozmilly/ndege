@@ -107,7 +107,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
     String placeName;
     double total_price;
     double total_distance;
-
+    int total_quantity = 0;
 
     TextView place;
 
@@ -131,7 +131,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
         }
 
-        UnitInterface unitInterface = ApiUtils.getUnitService();
+        UnitInterface unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
 
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -324,7 +324,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
 
 
-        feeInterface = ApiUtils.getFeeService();
+        feeInterface = ApiUtils.getFeeService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
         sharedPreferences2 = getSharedPreferences("Cart", 0);
         unit_name = sharedPreferences2.getString("unit_name", "");
@@ -406,6 +406,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                     for (MyCart myCart : arrayList) {
                                         price = myCart.getQuantity() * (myCart.getMenuItems().getPrice() + ndege_extra);
                                         total_fee += price;
+                                        total_quantity += myCart.getQuantity();
                                     }
 
                                     TextView tv = findViewById(R.id.check_out_items_fee);
@@ -422,6 +423,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 for (MyCart myCart : arrayList) {
                                     price = myCart.getQuantity() * (myCart.getMenuItems().getPrice()+ndege_extra);
                                     total_fee += price;
+                                    total_quantity += myCart.getQuantity();
                                 }
                                 TextView tv = findViewById(R.id.check_out_items_fee);
                                 tv.setText(String.valueOf("Ksh."+(total_fee+margin)));
@@ -445,7 +447,9 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    checkOutInterface = ApiUtils.getCheckOutService();
+
+
+                    checkOutInterface = ApiUtils.getCheckOutService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
 
                     SharedPreferences sp2 = getSharedPreferences("Location", 0);
@@ -463,10 +467,21 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        File file = (File) getIntent().getExtras().get("file");
-                                        RequestBody mFile = RequestBody.create(MediaType.parse("image/*"), file);
-                                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
-                                        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                                        MultipartBody.Part fileToUpload = null;
+                                        RequestBody filename = null;
+                                        if (getIntent().getExtras().get("file")!=null){
+                                            File file = (File) getIntent().getExtras().get("file");
+                                            RequestBody mFile = RequestBody.create(MediaType.parse("image/*"), file);
+                                            filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                                            fileToUpload  = MultipartBody.Part.createFormData("file", file.getName(), mFile);
+                                        } else {
+                                            RequestBody mfile = RequestBody.create(MultipartBody.FORM,"");
+                                            fileToUpload = MultipartBody.Part.createFormData("file","",mfile);
+                                            filename = RequestBody.create(MediaType.parse("text/plain"), "None");
+                                        }
+
+
+
                                         RequestBody json_body = RequestBody.create(MediaType.parse("text/plain"), json);
                                         RequestBody username_body = RequestBody.create(MediaType.parse("text/plain"), username);
                                         RequestBody transport_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transport_fee));
@@ -474,8 +489,17 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                         RequestBody latitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(latitude));
                                         RequestBody longitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(longitude));
                                         RequestBody desc_body = RequestBody.create(MediaType.parse("text/plain"), desc.getText().toString().trim());
+                                        if (!getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
+                                            if (total_quantity<2){
+                                                Toast.makeText(CheckoutActivity.this, "You need to have atleast 2 items in the cart!", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                checkOut(json_body, username_body, transport_body , name_body, latitude_body, longitude_body, desc_body, fileToUpload, filename);
 
-                                        checkOut(json_body, username_body, transport_body , name_body, latitude_body, longitude_body, desc_body, fileToUpload, filename);
+                                            }
+                                        } else {
+                                            checkOut(json_body, username_body, transport_body , name_body, latitude_body, longitude_body, desc_body, fileToUpload, filename);
+
+                                        }
                                     }
                                 });
                         alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "cancel",

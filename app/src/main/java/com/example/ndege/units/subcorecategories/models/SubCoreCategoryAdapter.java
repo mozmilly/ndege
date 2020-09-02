@@ -55,9 +55,9 @@ public class SubCoreCategoryAdapter extends RecyclerView.Adapter<SubCoreCategory
         });
 
         if (subCoreCategoryList.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+subCoreCategoryList.get(position).getImage())){
+            if (URLUtil.isValidUrl(subCoreCategoryList.get(position).getImage())){
                 Picasso.with(context)
-                        .load("https://storage.googleapis.com/ndege_app/"+subCoreCategoryList.get(position).getImage())
+                        .load(subCoreCategoryList.get(position).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(holder.imageView);
             }

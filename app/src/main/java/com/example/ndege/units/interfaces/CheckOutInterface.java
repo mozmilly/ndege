@@ -14,7 +14,7 @@ import retrofit2.http.Part;
 public interface CheckOutInterface {
 
     @Multipart
-    @POST("units/make_order/")
+    @POST("unit/make_order/")
     Call<MenuItems> make_order(
             @Part("items") RequestBody my_cart,
             @Part("username") RequestBody username,

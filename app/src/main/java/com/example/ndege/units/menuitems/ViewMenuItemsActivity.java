@@ -60,7 +60,7 @@ public class ViewMenuItemsActivity extends AppCompatActivity implements MenuItem
         label.setText(getIntent().getStringExtra("menu_cat_name"));
 
 
-        unitInterface = ApiUtils.getUnitService();
+        unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
         unitInterface.get_menu_items_api_view(getIntent().getIntExtra("id", 0), currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
             @Override
             public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {
@@ -145,7 +145,7 @@ public class ViewMenuItemsActivity extends AppCompatActivity implements MenuItem
             public void run() {
                 ProgressBar progressBar = findViewById(R.id.this_progress_bar);
                 progressBar.setVisibility(View.VISIBLE);
-                unitInterface = ApiUtils.getUnitService();
+                unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
                 unitInterface.get_menu_items_api_view(getIntent().getIntExtra("id", 0), currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
                     @Override
                     public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {

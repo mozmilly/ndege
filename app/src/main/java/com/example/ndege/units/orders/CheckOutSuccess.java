@@ -52,7 +52,7 @@ public class CheckOutSuccess extends AppCompatActivity implements MyOrderAdapter
 
 
 
-        orderInterface = ApiUtils.getOrderService();
+        orderInterface = ApiUtils.getOrderService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
         SharedPreferences sp = getSharedPreferences("pref", 0);
         String username = sp.getString("user", "no user");
         orderInterface.get_my_orders(username).enqueue(new Callback<List<MyOrder>>() {

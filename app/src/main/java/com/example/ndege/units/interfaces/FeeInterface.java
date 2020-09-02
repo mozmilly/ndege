@@ -9,6 +9,6 @@ import retrofit2.http.GET;
 
 public interface FeeInterface {
 
-    @GET("units/get_fees/")
+    @GET("unit/get_fees/")
     Call<List<Fee>> get_fees();
 }

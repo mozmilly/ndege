@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
+        <activity android:name=".login.ProfileActivity"></activity>
         <activity android:name=".landing" />
         <activity android:name=".help.ViewHelpDetails" />
         <activity android:name=".help.HelpActivity" />
@@ -39,7 +40,6 @@
         <activity android:name=".units.menuitems.ViewMenuItemsActivity" />
         <activity android:name=".units.NewArrivalActivity" />
         <activity android:name=".units.SendInquiryActivity" />
-        <activity android:name=".units.ViewAllDiscounted" />
         <activity android:name=".units.ViewLargerImageActivity" />
         <activity android:name=".units.subcorecategories.ViewSubCoreCategories" />
         <activity android:name=".units.maincategories.ViewMainCategories" />
@@ -62,7 +62,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".login.NdegeTermsActivity"></activity>
+        <activity android:name=".login.NdegeTermsActivity" />
     </application>
 
 </manifest>

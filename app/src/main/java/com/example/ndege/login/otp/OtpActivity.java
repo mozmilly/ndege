@@ -92,6 +92,7 @@ public class OtpActivity extends AppCompatActivity {
                             SharedPreferences.Editor edit= sp.edit();
                             edit.putInt("PREFERENCES_LOGIN", 1);
                             edit.putString("user", getIntent().getStringExtra("pNumber"));
+                            edit.putString("email", getIntent().getStringExtra("email"));
                             edit.apply();
                             if (getIntent().getStringExtra("intent").equals("login")){
                                 Intent intent = new Intent(OtpActivity.this, ViewCoreCategories.class);

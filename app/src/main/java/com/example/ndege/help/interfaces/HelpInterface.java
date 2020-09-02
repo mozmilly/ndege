@@ -9,6 +9,6 @@ import retrofit2.http.GET;
 
 public interface HelpInterface {
 
-    @GET("units/get_all_help/")
+    @GET("unit/get_all_help/")
     Call<List<Help>> get_all_help();
 }

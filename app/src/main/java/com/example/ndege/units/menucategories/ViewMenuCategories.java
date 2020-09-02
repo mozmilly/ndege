@@ -68,7 +68,7 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
         label.setText(getIntent().getStringExtra("main_cat_name"));
 
 
-        unitInterface = ApiUtils.getUnitService();
+        unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
         unitInterface.get_main_category_menu_category(getIntent().getIntExtra("id", 0)).enqueue(new Callback<List<MenuCategory>>() {
             @Override
             public void onResponse(Call<List<MenuCategory>> call, Response<List<MenuCategory>> response) {
@@ -191,7 +191,7 @@ public class ViewMenuCategories extends AppCompatActivity implements MenuCategor
             public void run() {
                 ProgressBar progressBar = findViewById(R.id.this_progress_bar);
                 progressBar.setVisibility(View.VISIBLE);
-                unitInterface = ApiUtils.getUnitService();
+                unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
                 unitInterface.get_main_cat_menu_items(getIntent().getIntExtra("id", 0), currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
                     @Override
                     public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {

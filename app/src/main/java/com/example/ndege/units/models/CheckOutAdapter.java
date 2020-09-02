@@ -27,6 +27,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class CheckOutAdapter extends RecyclerView.Adapter<CheckOutAdapter.MyViewHolder> {
 
     List<MyCart> menuList;
@@ -96,12 +98,12 @@ public class CheckOutAdapter extends RecyclerView.Adapter<CheckOutAdapter.MyView
             holder.name.setText(menuList.get(position).getMenuItems().getItem_name());
             holder.name.setAllCaps(true);
             holder.quantity.setText(String.valueOf(menuList.get(position).getQuantity()));
-        UnitInterface unitInterface = ApiUtils.getUnitService();
+        UnitInterface unitInterface = ApiUtils.getUnitService(context.getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
         unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
             @Override
             public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
                 if (response.code() == 200) {
-                    if (context.getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
+                    if (context.getSharedPreferences("pref", MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
                         for (ExtraPrice extraPrice: response.body()){
 
                             if (extraPrice.getName().equalsIgnoreCase("Ndege")){

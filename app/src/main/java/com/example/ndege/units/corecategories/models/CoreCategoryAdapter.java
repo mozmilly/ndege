@@ -57,9 +57,9 @@ public class CoreCategoryAdapter extends  RecyclerView.Adapter<CoreCategoryAdapt
         });
 
         if (coreCategoryList.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+coreCategoryList.get(position).getImage())){
+            if (URLUtil.isValidUrl(coreCategoryList.get(position).getImage())){
                 Picasso.with(context)
-                        .load("https://storage.googleapis.com/ndege_app/"+coreCategoryList.get(position).getImage())
+                        .load(coreCategoryList.get(position).getImage())
                         .placeholder(R.drawable.place_holder)
                         .into(holder.imageView);
             }

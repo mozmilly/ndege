@@ -68,7 +68,7 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
 
         label.setText(getIntent().getStringExtra("core_cat_name"));
 
-        unitInterface = ApiUtils.getUnitService();
+        unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
         unitInterface.get_sub_core_categories(getIntent().getIntExtra("id", 0)).enqueue(new Callback<List<SubCoreCategory>>() {
             @Override
             public void onResponse(Call<List<SubCoreCategory>> call, Response<List<SubCoreCategory>> response) {
@@ -176,7 +176,7 @@ public class ViewSubCoreCategories extends AppCompatActivity implements SubCoreC
             public void run() {
                 ProgressBar progressBar = findViewById(R.id.this_progress_bar);
                 progressBar.setVisibility(View.VISIBLE);
-                unitInterface = ApiUtils.getUnitService();
+                unitInterface = ApiUtils.getUnitService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
                 unitInterface.get_core_cat_menu_items(getIntent().getIntExtra("id", 0), currentPage, "Ndege").enqueue(new Callback<List<MenuItems>>() {
                     @Override
                     public void onResponse(Call<List<MenuItems>> call, Response<List<MenuItems>> response) {

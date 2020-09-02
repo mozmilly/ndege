@@ -13,19 +13,19 @@ import retrofit2.http.POST;
 
 public interface OrderInterface {
     @FormUrlEncoded
-    @POST("units/get_orders/")
+    @POST("unit/get_orders/")
     Call<List<MyOrder>> get_my_orders(
             @Field("username") String username
     );
 
     @FormUrlEncoded
-    @POST("units/get_order_extra/")
+    @POST("unit/get_order_extra/")
     Call<OrderExtra> get_order_extra(
             @Field("id") int id
     );
 
     @FormUrlEncoded
-    @POST("units/get_order_menu_items/")
+    @POST("unit/get_order_menu_items/")
     Call<List<MenuItems>> get_order_menu_items(
             @Field("id") int id
     );

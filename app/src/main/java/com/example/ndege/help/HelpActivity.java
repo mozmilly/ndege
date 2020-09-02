@@ -48,7 +48,7 @@ public class HelpActivity extends YouTubeBaseActivity implements HelpAdapter.OnI
         setContentView(R.layout.activity_help);
 
         recyclerView = findViewById(R.id.help_recycler);
-        HelpInterface helpInterface = ApiUtils.getHelpService();
+        HelpInterface helpInterface = ApiUtils.getHelpService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
 
         helpInterface.get_all_help().enqueue(new Callback<List<Help>>() {
             @Override

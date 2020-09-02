@@ -16,7 +16,7 @@ import com.example.ndege.units.product_reviews.interfaces.ProductReviewInterface
 
 public class ApiUtils {
     private ApiUtils() {}
-    public static final String BASE_URL = "http://ndege.pythonanywhere.com/";
+    public static final String BASE_URL = "https://ndegeserver.pythonanywhere.com/";
 
     public static LoginInterface getLoginService(){
         return RetrofitClient.getClient(BASE_URL).create(LoginInterface.class);
@@ -26,43 +26,39 @@ public class ApiUtils {
         return RetrofitClient.getClient(BASE_URL).create(SignUpInterface.class);
     }
 
-    public static UnitInterface getUnitService(){
-        return RetrofitClient.getClient(BASE_URL).create(UnitInterface.class);
+    public static UnitInterface getUnitService(String token){
+        return RetrofitClient.createService(UnitInterface.class, token);
     }
 
-    public static InquiryInterface getInquiryService(){
-        return RetrofitClient.getClient(BASE_URL).create(InquiryInterface.class);
+    public static InquiryInterface getInquiryService(String token){
+        return RetrofitClient.createService(InquiryInterface.class, token);
     }
 
-    public static MentionInterface getMentionService(){
-        return RetrofitClient.getClient(BASE_URL).create(MentionInterface.class);
+    public static FeeInterface getFeeService(String token){
+        return RetrofitClient.createService(FeeInterface.class, token);
     }
 
-    public static FeeInterface getFeeService(){
-        return RetrofitClient.getClient(BASE_URL).create(FeeInterface.class);
+    public static CheckOutInterface getCheckOutService(String token){
+        return RetrofitClient.createService(CheckOutInterface.class, token);
     }
 
-    public static CheckOutInterface getCheckOutService(){
-        return RetrofitClient.getClient(BASE_URL).create(CheckOutInterface.class);
+    public static OrderInterface getOrderService(String token){
+        return RetrofitClient.createService(OrderInterface.class, token);
     }
 
-    public static OrderInterface getOrderService(){
-        return RetrofitClient.getClient(BASE_URL).create(OrderInterface.class);
+    public static AdvertInteface get_advert_service(String token){
+        return RetrofitClient.createService(AdvertInteface.class, token);
     }
 
-    public static AdvertInteface get_advert_service(){
-        return RetrofitClient.getClient(BASE_URL).create(AdvertInteface.class);
+    public static ProductReviewInterface get_product_review_service(String token){
+        return RetrofitClient.createService(ProductReviewInterface.class, token);
     }
 
-    public static ProductReviewInterface get_product_review_service(){
-        return RetrofitClient.getClient(BASE_URL).create(ProductReviewInterface.class);
+    public static TokenInterface getTokenService(String token){
+        return RetrofitClient.createService(TokenInterface.class, token);
     }
 
-    public static TokenInterface getTokenService(){
-        return RetrofitClient.getClient(BASE_URL).create(TokenInterface.class);
-    }
-
-    public static HelpInterface getHelpService(){
-        return RetrofitClient.getClient(BASE_URL).create(HelpInterface.class);
+    public static HelpInterface getHelpService(String token){
+        return RetrofitClient.createService(HelpInterface.class, token);
     }
 }

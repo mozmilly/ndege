@@ -10,13 +10,12 @@ import retrofit2.http.POST;
 
 public interface SignUpInterface {
     @FormUrlEncoded
-    @POST("sign_up/?format=json")
+    @POST("accounts/api_sign_up/?format=json")
     Call<SignUp> sign_up(
             @Field("full_name") String full_name,
             @Field("username") String username,
             @Field("password") String password,
-            @Field("confirm_password") String confirm_password,
             @Field("email") String email,
-            @Field("ref_code") String ref_code
+            @Field("town") String town
     );
 }

@@ -66,7 +66,6 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
             intent.putExtra("client_phone", "");
             intent.putExtra("margin", "");
             intent.putExtra("client_size", "");
-            intent.putExtra("file", "");
             startActivity(intent);
         }
 
