@@ -86,31 +86,24 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
     private List<MyCart> arrayList;
     private SharedPreferences sharedPreferences, sharedPreferences2;
 
-    TextView serviceFee, deliveryFee, marginText;
+    TextView deliveryFee, marginText;
 
     List<Fee> feeList;
 
-    double distance1;
+
     CheckOutInterface checkOutInterface;
 
     public List<MyCart> getArrayList() {
         return arrayList;
     }
     FeeInterface feeInterface;
-    double service_fee = 0;
     double transport_fee = 0;
     double total_fee=0;
-    double distance = 0;
-    double base = 0;
     String unit_name;
-    LatLng placeSelected;
-    String placeName;
     double total_price;
-    double total_distance;
     int total_quantity = 0;
 
-    TextView place;
-
+    LocationName locationName;
     double margin = 0;
     Spinner locationSpinner;
     double ndege_extra = 0;
@@ -137,7 +130,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                LocationName locationName = (LocationName) adapterView.getSelectedItem();
+                locationName = (LocationName) adapterView.getSelectedItem();
 
                 SharedPreferences sharedPreferences = getSharedPreferences("Cart", 0);
                 String town = sharedPreferences.getString("location_town", "Nakuru");
@@ -183,7 +176,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     locationSpinner.setAdapter(dataAdapter);
 
-                    LocationName locationName = (LocationName) locationSpinner.getSelectedItem();
+                    locationName = (LocationName) locationSpinner.getSelectedItem();
 
                     SharedPreferences sharedPreferences = getSharedPreferences("Cart", 0);
                     String town = sharedPreferences.getString("location_town", "Nakuru");
@@ -193,6 +186,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                         public void onResponse(Call<LocationPrice> call, Response<LocationPrice> response) {
                             if (response.code()==200){
                                 transport_fee = response.body().getPrice();
+                                Toast.makeText(CheckoutActivity.this, String.valueOf(transport_fee), Toast.LENGTH_SHORT).show();
                                 deliveryFee.setText(String.valueOf(transport_fee));
 
                                 TextView total = findViewById(R.id.checkout_total_fee);
@@ -219,104 +213,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
         EditText desc = findViewById(R.id.description);
 
-        // Initialize Places.
-        Places.initialize(getApplicationContext(), "AIzaSyB7LQ2ep5cZqRk3b63ylNe1CWDbkazR2OA");
-
-        // Create a new Places client instance.
-        PlacesClient placesClient = Places.createClient(this);
-
-        // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_checkout);
-
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-
-        autocompleteFragment.setCountry("KE");
-        autocompleteFragment.setHint("Delivery Point?");
-        ((EditText)autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input)).setTextSize(15.0f);
-        // Set up a PlaceSelectionListener to handle the response.
-        ((EditText)autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input)).setHintTextColor(Color.BLACK);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Drawable drawable = getDrawable(R.drawable.border);
-            ((EditText)autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input)).setBackground(drawable);
-
-        }
         SharedPreferences sp1 = getSharedPreferences("pref", 0);
-        placeSelected =  new LatLng(Double.parseDouble(Objects.requireNonNull(sp1.getString("my_latitude", "0"))), Double.parseDouble(Objects.requireNonNull(sp1.getString("my_longitude", "0"))));
-        autocompleteFragment.setText(sp1.getString("my_loc_name", "Unnamed Road"));
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-
-                sharedPreferences2 = getSharedPreferences("Cart", 0);
-                double lat = Double.parseDouble(sharedPreferences2.getString("latitude", ""));
-                double longitude = Double.parseDouble(sharedPreferences2.getString("longitude", ""));
-
-
-                placeSelected = place.getLatLng();
-                placeName = place.getName();
-
-                String str_origin = "origin=" + lat + "," + longitude;
-                String str_dest = "destination=" + place.getLatLng().latitude + "," + place.getLatLng().longitude;
-                String sensor = "sensor=false";
-                String mode = "mode = driving";
-                String key = "key=AIzaSyA_l8XHE9Efm1op5uba-4Kzjev9KwBz1Dg";
-                String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + key;
-                String output = "json";
-                String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-
-                Log.d("onMapClick", url.toString());
-                FetchUrl FetchUrl = new FetchUrl();
-                try {
-                    String data = FetchUrl.execute(url).get();
-
-                    JSONObject obj = new JSONObject(data);
-
-                    JSONArray jsonChild = (JSONArray) obj.get("routes");
-                    JSONObject jsonObject2 = (JSONObject) jsonChild.get(0);
-                    JSONArray jsonObject3 = (JSONArray) jsonObject2.get("legs");
-                    JSONObject elementObj = (JSONObject) jsonObject3.get(0);
-                    JSONObject distanceObj = (JSONObject) elementObj.get("distance");
-                    String distance = distanceObj.getString("text");
-                    String dist = distance.replaceAll("[^\\d.]", "");
-                    String nameOfDistance = distance.replace(dist, "").trim();
-                    distance1 = Double.parseDouble(dist);
-                    if (nameOfDistance.equals("m")) {
-                        distance1 = distance1 / 1000;
-                    }
-
-                    total_price = base+distance1*transport_fee;
-
-                    deliveryFee.setText(String.valueOf("Ksh."+total_price));
-                    TextView total = findViewById(R.id.checkout_total_fee);
-                    total.setText(String.valueOf("Ksh."+(total_fee+total_price)));
-//                    price.setText(String.valueOf("Price: Ksh."+total_price));
-
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-
-
-
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-//                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-
-        serviceFee = findViewById(R.id.checkout_service_fee);
         deliveryFee = findViewById(R.id.check_out_delivery_fee);
 
         TextView textView = findViewById(R.id.service_label);
@@ -328,40 +225,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
         sharedPreferences2 = getSharedPreferences("Cart", 0);
         unit_name = sharedPreferences2.getString("unit_name", "");
-
-        feeInterface.get_fees().enqueue(new Callback<List<Fee>>() {
-            @Override
-            public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response){
-                feeList = response.body();
-
-                SharedPreferences sharedPreferences = getSharedPreferences("Cart", 0);
-                distance = Double.parseDouble(sharedPreferences.getString("distance", "0"));
-
-                for (Fee fee: feeList){
-                    if (fee.getFee_name().equals("Service")){
-                        service_fee = fee.getFee_amount();
-                    } else if (fee.getFee_name().equals("Transport")){
-                        transport_fee = fee.getFee_amount();
-                    } else if (fee.getFee_name().equals("Base")){
-                        base = fee.getFee_amount();
-                    }
-                }
-                serviceFee.setText(String.valueOf("Ksh."+service_fee));
-                serviceFee.setVisibility(View.GONE);
-                double y = transport_fee*distance+base;
-                deliveryFee.setText(String.valueOf("Ksh."+total_price));
-                TextView total = findViewById(R.id.checkout_total_fee);
-                total.setText(String.valueOf("Ksh."+(total_fee+total_price)));
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Fee>> call, Throwable t) {
-
-            }
-        });
-
-
         recyclerView = findViewById(R.id.check_out_items);
 
 
@@ -416,7 +279,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                             }
                         } else {
                             for (ExtraPrice extraPrice : response.body()) {
-                                if (extraPrice.getName().equalsIgnoreCase("Supermarket")) {
+                                if (extraPrice.getName().equalsIgnoreCase("Retailer")) {
                                     ndege_extra = extraPrice.getAmount();
 
                                 double price = 0;
@@ -453,13 +316,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
 
                     SharedPreferences sp2 = getSharedPreferences("Location", 0);
-//                    String name = sp2.getString("name", "");
-//                    double latitude = Double.parseDouble(sp2.getString("loc_lat", ""));
-//                    double longitude = Double.parseDouble(sp2.getString("loc_long", ""));
-                    if (placeSelected!=null){
-                        double latitude = placeSelected.latitude;
-                        double longitude = placeSelected.longitude;
-                        String name = "";
+
 
                         AlertDialog alertDialog1 = new AlertDialog.Builder(CheckoutActivity.this).create();
                         alertDialog1.setMessage("Do you want to make this order?");
@@ -485,19 +342,17 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                                         RequestBody json_body = RequestBody.create(MediaType.parse("text/plain"), json);
                                         RequestBody username_body = RequestBody.create(MediaType.parse("text/plain"), username);
                                         RequestBody transport_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transport_fee));
-                                        RequestBody name_body = RequestBody.create(MediaType.parse("text/plain"), name);
-                                        RequestBody latitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(latitude));
-                                        RequestBody longitude_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(longitude));
+                                        RequestBody loc_body = RequestBody.create(MediaType.parse("text/plain"), locationName.getName());
                                         RequestBody desc_body = RequestBody.create(MediaType.parse("text/plain"), desc.getText().toString().trim());
                                         if (!getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
                                             if (total_quantity<2){
                                                 Toast.makeText(CheckoutActivity.this, "You need to have atleast 2 items in the cart!", Toast.LENGTH_LONG).show();
                                             } else {
-                                                checkOut(json_body, username_body, transport_body , name_body, latitude_body, longitude_body, desc_body, fileToUpload, filename);
+                                                checkOut(json_body, username_body, transport_body , loc_body,desc_body, fileToUpload, filename);
 
                                             }
                                         } else {
-                                            checkOut(json_body, username_body, transport_body , name_body, latitude_body, longitude_body, desc_body, fileToUpload, filename);
+                                            checkOut(json_body, username_body, transport_body ,  loc_body,desc_body, fileToUpload, filename);
 
                                         }
                                     }
@@ -511,38 +366,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                         alertDialog1.show();
                         alertDialog1.getWindow().setGravity(Gravity.BOTTOM);
                         alertDialog1.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                    } else {
-                        Toast.makeText(CheckoutActivity.this, "Please select a drop point!!", Toast.LENGTH_SHORT).show();
-                    }
 
-                }
-            });
-
-            Button order_whatsapp = findViewById(R.id.whatsapp_order);
-
-            order_whatsapp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    Uri mUri = Uri.parse("smsto:+254753540580");
-
-                    StringBuilder order = new StringBuilder();
-
-                    for (MyCart myCart: arrayList){
-                        order.append(myCart.getMenuItems().getItem_name()).append(" ").append(myCart.getQuantity()).append(",").append("\n");
-                    }
-                    String unit_name = sharedPreferences.getString("unit_name", "");
-                    String whatsAppMessage = "Order: "+"\n"+order.toString()+"User Phone:"+username+"\n"+"Drop Location: "+placeName+"\n"+ "Total Fee:"+String.valueOf(total_fee + transport_fee*distance+base)+"\n"+"Description: "+desc.getText().toString().trim() +"\n"+"Store Name:"+unit_name;
-//                    Intent sendIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:+254753540580"+ "?body="+ whatsAppMessage));
-
-                    String mobile = "+254753540580";
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + mobile + "&text=" + whatsAppMessage)));
-
-                    SharedPreferences settings = getSharedPreferences("Cart", 0);
-
-                    settings.edit().clear().apply();
-
-//                    Intent intent = new Intent(CheckoutActivity.this, CheckOutSuccess.class);
-//                    startActivity(intent);
                 }
             });
 
@@ -561,8 +385,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
 
     }
 
-    public void checkOut(RequestBody myCart, RequestBody username, RequestBody total_price, RequestBody name, RequestBody latitude, RequestBody longitude, RequestBody desc, MultipartBody.Part file, RequestBody file_name){
-        checkOutInterface.make_order(myCart, username, total_price, name, latitude, longitude,
+    public void checkOut(RequestBody myCart, RequestBody username, RequestBody total_price, RequestBody loc_body,RequestBody desc, MultipartBody.Part file, RequestBody file_name){
+        checkOutInterface.make_order(myCart, username, total_price, loc_body,
                 desc, RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("client_name")),
                 RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("client_phone")),
                 RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("margin")), RequestBody.create(MediaType.parse("text/plain"),"ndege"), file, file_name).enqueue(new Callback<MenuItems>() {
@@ -588,107 +412,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
             }
         });
 
-    }
-
-    private class  FetchUrl extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... url) {
-            String data = "";
-
-            try {
-                data = downloadUrl(url[0]);
-                Log.d("Background Task data", data.toString());
-            } catch (Exception e) {
-                Log.d("Background Task", e.toString());
-            }
-
-            return data;
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-            parserTask.execute(result);
-
-        }
-    }
-    private String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try {
-            URL url = new URL(strUrl);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.connect();
-            iStream = urlConnection.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-            StringBuffer sb = new StringBuffer();
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            data = sb.toString();
-            Log.d("downloadUrl", data.toString());
-            br.close();
-        } catch (Exception e) {
-            Log.d("Exception", e.toString());
-        } finally {
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
-    }
-
-    private class  ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-                Log.d("ParserTask", jsonData[0].toString());
-                JSONParserTask parser = new JSONParserTask();
-                Log.d("ParserTask", parser.toString());
-                routes = parser.parse(jObject);
-                Log.d("ParserTask", "Executing routes");
-                Log.d("ParserTask", routes.toString());
-
-            } catch (Exception e) {
-                Log.d("ParserTask", e.toString());
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList<LatLng> points;
-            PolylineOptions lineOptions = null;
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<>();
-                lineOptions = new PolylineOptions();
-                List<HashMap<String, String>> path = result.get(i);
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-                    points.add(position);
-                }
-                lineOptions.addAll(points);
-                lineOptions.width(10);
-                lineOptions.color(Color.RED);
-
-
-            }
-
-        }
     }
 
     @Override

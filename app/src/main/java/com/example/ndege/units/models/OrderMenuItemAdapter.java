@@ -16,8 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.ndege.R;
+import com.example.ndege.units.interfaces.UnitInterface;
+import com.example.ndege.utils.ApiUtils;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class OrderMenuItemAdapter extends RecyclerView.Adapter<OrderMenuItemAdapter.MyViewHolder> {
 
@@ -45,9 +53,9 @@ public class OrderMenuItemAdapter extends RecyclerView.Adapter<OrderMenuItemAdap
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if (menuItemsList.get(position).getImage()!=null){
-            if (URLUtil.isValidUrl("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())){
+            if (URLUtil.isValidUrl(menuItemsList.get(position).getImage())){
                 Glide.with(context)
-                        .load("https://storage.googleapis.com/ndege_app/"+menuItemsList.get(position).getImage())
+                        .load(menuItemsList.get(position).getImage())
                         .into(holder.image);
                 holder.image.setVisibility(View.VISIBLE);
             }
@@ -57,7 +65,35 @@ public class OrderMenuItemAdapter extends RecyclerView.Adapter<OrderMenuItemAdap
 
 
         holder.name.setText(menuItemsList.get(position).getItem_name());
-        holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+100)));
+        UnitInterface unitInterface = ApiUtils.getUnitService(context.getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
+        unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+            @Override
+            public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                if (response.code()==200){
+                    if (context.getSharedPreferences("pref", MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
+                        for (ExtraPrice extraPrice: response.body()){
+
+                            if (extraPrice.getName().equalsIgnoreCase("Ndege")){
+                                holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                            }
+                        }
+                    } else {
+                        for (ExtraPrice extraPrice: response.body()){
+
+                            if (extraPrice.getName().equalsIgnoreCase("Retailer")){
+                                holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
+
+            }
+        });
         holder.description.setText(menuItemsList.get(position).getDescription());
 
         holder.parent.setOnClickListener(new View.OnClickListener() {

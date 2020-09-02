@@ -26,8 +26,8 @@ public class NdegeTermsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ndege_terms);
         Button button = findViewById(R.id.accept_ndege);
         button.setOnClickListener(v -> {
-            LoginInterface loginInterface = ApiUtils.getLoginService();
-            loginInterface.switch_to_ndege_reseller(getSharedPreferences("pref", MODE_PRIVATE).getString("user", "none")).enqueue(new Callback<Login>() {
+            LoginInterface loginInterface = ApiUtils.getLoginServiceAuth(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
+            loginInterface.switch_to_ndege_reseller().enqueue(new Callback<Login>() {
                 @Override
                 public void onResponse(Call<Login> call, Response<Login> response) {
                     if (response.code()==200){

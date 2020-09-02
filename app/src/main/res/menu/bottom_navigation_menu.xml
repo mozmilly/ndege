@@ -10,6 +10,11 @@
         android:icon="@drawable/help"
         android:title="Help"/>
     <item
+        android:id="@+id/orders"
+        android:enabled="true"
+        android:icon="@drawable/orders"
+        android:title="Orders"/>
+    <item
         android:id="@+id/profile"
         android:enabled="true"
         android:icon="@drawable/profile"

@@ -20,8 +20,6 @@ public interface CheckOutInterface {
             @Part("username") RequestBody username,
             @Part("total_price") RequestBody total_price,
             @Part("loc_name") RequestBody loc_name,
-            @Part("loc_lat") RequestBody loc_lat,
-            @Part("loc_long") RequestBody loc_long,
             @Part("description") RequestBody description,
             @Part("client_name") RequestBody client_name,
             @Part("client_phone") RequestBody client_phone,

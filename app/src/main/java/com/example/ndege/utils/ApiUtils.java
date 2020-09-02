@@ -21,7 +21,9 @@ public class ApiUtils {
     public static LoginInterface getLoginService(){
         return RetrofitClient.getClient(BASE_URL).create(LoginInterface.class);
     }
-
+    public static LoginInterface getLoginServiceAuth(String token){
+        return RetrofitClient.createService(LoginInterface.class, token);
+    }
     public static SignUpInterface getSignUpService(){
         return RetrofitClient.getClient(BASE_URL).create(SignUpInterface.class);
     }

@@ -34,7 +34,6 @@ public abstract class PaginationListener  extends RecyclerView.OnScrollListener 
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-
         int visibleItemCount = layoutManager.getChildCount();
         int totalItemCount = layoutManager.getItemCount();
         int mSpanCount = 2;
@@ -42,20 +41,6 @@ public abstract class PaginationListener  extends RecyclerView.OnScrollListener 
         int[] into = new int[mSpanCount];
 
         int firstVisibleItem = layoutManager.findFirstVisibleItemPositions(into)[0];
-
-        if (coreRecyclerView!=null&&advertRecyclerView!=null){
-//            coreRecyclerView.setVisibility(View.GONE);
-//            advertRecyclerView.setVisibility(View.GONE);
-            if (firstVisibleItem!=0){
-                coreRecyclerView.setVisibility(View.GONE);
-                advertRecyclerView.setVisibility(View.GONE);
-            } else {
-                coreRecyclerView.setVisibility(View.VISIBLE);
-                advertRecyclerView.setVisibility(View.VISIBLE);
-            }
-
-        }
-
         if (!isLoading() && !isLastPage()){
             if ((visibleItemCount + firstVisibleItem) >= totalItemCount
                 && firstVisibleItem >= 0

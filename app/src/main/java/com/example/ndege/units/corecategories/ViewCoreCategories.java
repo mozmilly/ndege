@@ -415,7 +415,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     menuItemAdapter.notifyDataSetChanged();
                     menuItemRecycler.setHasFixedSize(true);
                     menuItemRecycler.addOnScrollListener(new PaginationListener(staggeredGridLayoutManager, recyclerView, parent) {
-
                         @Override
                         protected void loadMoreItems() {
                             isLoading = true;
@@ -460,7 +459,10 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     Intent intent1 = new Intent(ViewCoreCategories.this, ProfileActivity.class);
                     startActivity(intent1);
                     break;
-
+                case R.id.orders:
+                    Intent intent2 = new Intent(ViewCoreCategories.this, CheckOutSuccess.class);
+                    startActivity(intent2);
+                    break;
             }
             return true;
         });

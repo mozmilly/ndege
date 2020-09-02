@@ -114,7 +114,7 @@ public class CheckOutAdapter extends RecyclerView.Adapter<CheckOutAdapter.MyView
                     } else {
                         for (ExtraPrice extraPrice: response.body()){
 
-                            if (extraPrice.getName().equalsIgnoreCase("Supermarket")){
+                            if (extraPrice.getName().equalsIgnoreCase("Retailer")){
                                 holder.price.setText(String.valueOf(menuList.get(position).getQuantity() * (menuList.get(position).getMenuItems().getPrice() + extraPrice.getAmount())));
 
                             }
