@@ -68,7 +68,6 @@ public class SplashScreen extends AppCompatActivity {
                         public void onFailure(Call<Login> call, Throwable t) {
                             Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
                             startActivity(intent);
-                            Toast.makeText(SplashScreen.this, "Check your internet connection!!", Toast.LENGTH_SHORT).show();
 
                         }
                     });

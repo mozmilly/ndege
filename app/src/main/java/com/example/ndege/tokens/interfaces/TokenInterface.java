@@ -12,10 +12,8 @@ import retrofit2.http.POST;
 
 public interface TokenInterface {
     @FormUrlEncoded
-    @POST("pooling/store_token/")
-    Call<TokenModel> store_token(
-            @Field("username") String username,
-            @Field("token") String token,
-            @Field("user_type") String user_type
+    @POST("accounts/update_firebase_token/")
+    Call<Void> store_token(
+            @Field("token") String token
     );
 }

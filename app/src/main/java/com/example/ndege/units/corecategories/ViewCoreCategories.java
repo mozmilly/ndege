@@ -183,18 +183,16 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                         String token = task.getResult().getToken();
 
                         TokenInterface tokenInterface = ApiUtils.getTokenService(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
-                        SharedPreferences sp = getSharedPreferences("pref", 0);
-                        String username = sp.getString("user", "no user");
-                        tokenInterface.store_token(username, token, "Ndege").enqueue(new Callback<TokenModel>() {
+                        tokenInterface.store_token(token).enqueue(new Callback<Void>() {
                             @Override
-                            public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
+                            public void onResponse(Call<Void> call, Response<Void> response) {
                                 if (response.code()==200){
                                     Toast.makeText(ViewCoreCategories.this, "Success", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<TokenModel> call, Throwable t) {
+                            public void onFailure(Call<Void> call, Throwable t) {
 
                             }
                         });

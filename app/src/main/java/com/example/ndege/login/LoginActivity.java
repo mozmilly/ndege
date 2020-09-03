@@ -91,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
 
 
-                    Toast.makeText(LoginActivity.this, login.getUsername(), Toast.LENGTH_SHORT).show();
 
                     loginInterface.get_api_auth_token(username, password).enqueue(new Callback<Token>() {
                         @Override
