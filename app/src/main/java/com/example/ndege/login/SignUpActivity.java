@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.ndege.R;
+import com.example.ndege.SplashScreen;
 import com.example.ndege.login.interfaces.SignUpInterface;
 import com.example.ndege.login.models.SignUp;
 import com.example.ndege.units.corecategories.ViewCoreCategories;
@@ -81,7 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpInterface.sign_up(full_name, username, password, email, town).enqueue(new Callback<SignUp>() {
             @Override
             public void onResponse(Call<SignUp> call, Response<SignUp> response) {
-                Intent intent = new Intent(SignUpActivity.this, ViewCoreCategories.class);
+                Intent intent = new Intent(SignUpActivity.this, SplashScreen.class);
                 if (response.code() == 200) {
                     Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
