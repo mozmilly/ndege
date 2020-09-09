@@ -167,7 +167,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             getChooseType();
         }
 
-        Toast.makeText(this, String.valueOf(getSharedPreferences("pref", Context.MODE_PRIVATE).getBoolean("is_ndege_reseller", false)), Toast.LENGTH_SHORT).show();
 
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -175,7 +174,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         if (!task.isSuccessful()) {
 //                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            Toast.makeText(ViewCoreCategories.this, "Failed", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -187,7 +185,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
                                 if (response.code()==200){
-                                    Toast.makeText(ViewCoreCategories.this, "Success", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -291,7 +288,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
         }
 
         advertInteface = ApiUtils.get_advert_service(getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
-        Toast.makeText(this, getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"), Toast.LENGTH_SHORT).show();
         advertInteface.get_all_adverts().enqueue(new Callback<List<Advert>>() {
             @Override
             public void onResponse(Call<List<Advert>> call, Response<List<Advert>> response) {
@@ -575,7 +571,6 @@ public class ViewCoreCategories extends AppCompatActivity implements CoreCategor
             @Override
             public void onClick(DialogInterface d, int n) {
                 typeSelected = n;
-                Toast.makeText(ViewCoreCategories.this, String.valueOf(n), Toast.LENGTH_SHORT).show();
             }
 
         });

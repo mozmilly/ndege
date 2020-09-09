@@ -40,6 +40,14 @@ public class ImagePagerAdapter extends PagerAdapter {
         this.images = images;
     }
 
+    //declare interface
+    private OnItemClicked onClick;
+
+    //make interface like this
+    public interface OnItemClicked {
+        void onItemClick(int position);
+    }
+
     @Override
     public int getCount() {
         return images.size();
@@ -57,19 +65,30 @@ public class ImagePagerAdapter extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.custom_layout, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.hire_car_images);
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (context instanceof ViewCoreCategories){
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                try{
-                    ViewCoreCategories.setAdvert(ViewCoreCategories.getAdvertList().get(position));
-                    Intent intent = new Intent(context, MessageActivity.class);
-                    context.startActivity(intent);
-                } catch (Exception ex){
+                    try{
+                        ViewCoreCategories.setAdvert(ViewCoreCategories.getAdvertList().get(position));
+                        Intent intent = new Intent(context, MessageActivity.class);
+                        context.startActivity(intent);
+                    } catch (Exception ex){
+
+                    }
+                }
+            });
+        } else if (context instanceof ViewLargerImageActivity){
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClick.onItemClick(position);
 
                 }
-            }
-        });
+            });
+        }
+
 
         if (images.get(position).getImage()!=null){
             if (URLUtil.isValidUrl(""+images.get(position).getImage())){
@@ -90,5 +109,9 @@ public class ImagePagerAdapter extends PagerAdapter {
         ViewPager vp = (ViewPager) container;
         View view = (View) object;
         vp.removeView(view);
+    }
+    public void setOnClick(OnItemClicked onClick)
+    {
+        this.onClick=onClick;
     }
 }

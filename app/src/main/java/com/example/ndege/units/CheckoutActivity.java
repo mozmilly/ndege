@@ -186,7 +186,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                         public void onResponse(Call<LocationPrice> call, Response<LocationPrice> response) {
                             if (response.code()==200){
                                 transport_fee = response.body().getPrice();
-                                Toast.makeText(CheckoutActivity.this, String.valueOf(transport_fee), Toast.LENGTH_SHORT).show();
                                 deliveryFee.setText(String.valueOf(transport_fee));
 
                                 TextView total = findViewById(R.id.checkout_total_fee);
@@ -392,7 +391,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckOutAdapt
                 RequestBody.create(MediaType.parse("text/plain"), getIntent().getStringExtra("margin")), RequestBody.create(MediaType.parse("text/plain"),"ndege"), file, file_name).enqueue(new Callback<MenuItems>() {
             @Override
             public void onResponse(Call<MenuItems> call, Response<MenuItems> response) {
-                Toast.makeText(CheckoutActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 if (response.code()==200){
                     SharedPreferences settings = getSharedPreferences("Cart", 0);
                     settings.edit().clear().apply();

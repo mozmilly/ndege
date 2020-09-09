@@ -92,8 +92,7 @@ public class SendInquiryActivity extends AppCompatActivity {
                                 startActivity(intent);
 
                             } else {
-                                Toast.makeText(SendInquiryActivity.this,
-                                        String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+
 
                             }
                         }

@@ -70,7 +70,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Bitmap bitmap ;
         NotificationCompat.Builder mBuilder;
         Bitmap bmp = null;
-        Log.d("bigPicture", bigpicture);
         try {
             InputStream in = new URL(bigpicture).openStream();
             bmp = BitmapFactory.decodeStream(in);

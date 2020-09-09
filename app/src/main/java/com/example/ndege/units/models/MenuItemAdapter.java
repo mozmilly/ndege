@@ -53,6 +53,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
     List<MenuItems> menuItemsList;
 
     Context context;
+    double extra_price = 0;
 
     String variableString = "";
     Boolean header = false;
@@ -136,37 +137,43 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MyView
 
 
             holder.name.setText(menuItemsList.get(position).getItem_name());
-            UnitInterface unitInterface = ApiUtils.getUnitService(context.getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
-            unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
-                @Override
-                public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
-                    if (response.code()==200){
-                        if (context.getSharedPreferences("pref", MODE_PRIVATE).getBoolean("is_ndege_reseller", false)){
-                            for (ExtraPrice extraPrice: response.body()){
+            if (extra_price==0) {
+                UnitInterface unitInterface = ApiUtils.getUnitService(context.getSharedPreferences("Prefs", MODE_PRIVATE).getString("auth_token", "none"));
+                unitInterface.get_extra_price().enqueue(new Callback<List<ExtraPrice>>() {
+                    @Override
+                    public void onResponse(Call<List<ExtraPrice>> call, Response<List<ExtraPrice>> response) {
+                        if (response.code() == 200) {
+                            if (context.getSharedPreferences("pref", MODE_PRIVATE).getBoolean("is_ndege_reseller", false)) {
+                                for (ExtraPrice extraPrice : response.body()) {
 
-                                if (extraPrice.getName().equalsIgnoreCase("Ndege")){
-                                    holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
+                                    if (extraPrice.getName().equalsIgnoreCase("Ndege")) {
+                                        holder.price.setText(String.valueOf("Ksh." + (menuItemsList.get(position).getPrice() + extraPrice.getAmount())));
+                                        extra_price = extraPrice.getAmount();
+                                    }
+                                }
+                            } else {
+                                holder.whatsapp.setVisibility(View.GONE);
+                                holder.general.setVisibility(View.GONE);
+                                for (ExtraPrice extraPrice : response.body()) {
+
+                                    if (extraPrice.getName().equalsIgnoreCase("Retailer")) {
+                                        holder.price.setText(String.valueOf("Ksh." + (menuItemsList.get(position).getPrice() + extraPrice.getAmount())));
+                                        extra_price = extraPrice.getAmount();
+                                    }
                                 }
                             }
-                        } else {
-                            holder.whatsapp.setVisibility(View.GONE);
-                            holder.general.setVisibility(View.GONE);
-                            for (ExtraPrice extraPrice: response.body()){
 
-                                if (extraPrice.getName().equalsIgnoreCase("Retailer")){
-                                    holder.price.setText(String.valueOf("Ksh."+(menuItemsList.get(position).getPrice()+extraPrice.getAmount())));
-                                }
-                            }
                         }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
 
                     }
-                }
-
-                @Override
-                public void onFailure(Call<List<ExtraPrice>> call, Throwable t) {
-
-                }
-            });
+                });
+            } else {
+                holder.price.setText(String.valueOf("Ksh." + (menuItemsList.get(position).getPrice() + extra_price)));
+            }
             holder.min_order.setText(("Atleast "+menuItemsList.get(position).getMinimum_order()+" items"));
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -89,7 +89,6 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
                                     if (ContextCompat.checkSelfPermission(ClientDetailsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
                                         ActivityCompat.requestPermissions(ClientDetailsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_GALLERY_CODE);
-                                        Toast.makeText(ClientDetailsActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
                                     }
                                     else
                                     {
@@ -145,7 +144,6 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_GALLERY_CODE && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
             uri = data.getData();
             Uri selectedImage = uri;
             imageView.setImageURI(selectedImage);
@@ -159,7 +157,6 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
                 EasyPermissions.requestPermissions(this, getString(R.string.read_file), READ_REQUEST_CODE, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
         } else if (requestCode==1&&resultCode==RESULT_OK){
-            Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             uri = getImageUri(getApplicationContext(), imageBitmap);
@@ -178,7 +175,6 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
 
         }
         else {
-            Toast.makeText(this, "Done else", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -207,7 +203,6 @@ public class ClientDetailsActivity extends AppCompatActivity implements EasyPerm
             imageView.setImageURI(selectedImage);
 
         } else {
-            Toast.makeText(this, "uri is null", Toast.LENGTH_SHORT).show();
         }
     }
     @Override

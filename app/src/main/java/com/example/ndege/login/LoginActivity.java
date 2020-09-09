@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<Login> call, Response<Login> response) {
 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                if (response.code()==200){
+                if (response.code()==200||response.code()==201){
                     Login login = response.body();
                     SharedPreferences sp=getSharedPreferences("pref",0);
                     SharedPreferences.Editor editor = sp.edit();

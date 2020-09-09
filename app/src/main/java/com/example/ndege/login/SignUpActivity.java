@@ -79,9 +79,9 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void signUpPost(String full_name, String username, String password, String email, String town) {
-        signUpInterface.sign_up(full_name, username, password, email, town).enqueue(new Callback<SignUp>() {
+        signUpInterface.sign_up(full_name, username, password, email, town).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<SignUp> call, Response<SignUp> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 Intent intent = new Intent(SignUpActivity.this, SplashScreen.class);
                 if (response.code() == 200) {
                     Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
@@ -95,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<SignUp> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
 
             }
         });

@@ -53,6 +53,7 @@
         <Spinner
             android:id="@+id/spinnerCountries"
             android:layout_width="120dp"
+            android:foregroundTint="@color/black"
             android:layout_height="wrap_content" />
 
         <EditText
@@ -64,6 +65,7 @@
             android:inputType="number"
             android:hint="Eg: 7123456"
             android:maxLength="10"
+            android:textColor="@color/black"
             android:textColorHint="@android:color/black" />
 
     </LinearLayout>

@@ -74,7 +74,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewLargerImageActivity extends AppCompatActivity implements View.OnTouchListener {
+public class ViewLargerImageActivity extends AppCompatActivity implements View.OnTouchListener, ImagePagerAdapter.OnItemClicked {
 
     //    Zoom
     private static final String TAG = "Touch";
@@ -144,6 +144,7 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
     ExtraFieldsAdapter extraFieldsAdapter;
     RatingBar ratingBar;
     TextView rating;
+    List<PortfolioImage> portfolioImages = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -264,9 +265,6 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Drawable drawable = imageView.getDrawable();
-                BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
-                Bitmap bitmap = bitmapDrawable .getBitmap();
                 Picasso.with(ViewLargerImageActivity.this)
                         .load(getIntent().getStringExtra("image"))
                         .into(new Target() {
@@ -309,8 +307,9 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
         unitInterface.get_menu_item_images(menuItems.getId()).enqueue(new Callback<List<PortfolioImage>>() {
             @Override
             public void onResponse(Call<List<PortfolioImage>> call, Response<List<PortfolioImage>> response) {
-                ImagePagerAdapter viewPagerAdapter = new ImagePagerAdapter(ViewLargerImageActivity.this, response.body());
-
+                portfolioImages = response.body();
+                ImagePagerAdapter viewPagerAdapter = new ImagePagerAdapter(ViewLargerImageActivity.this, portfolioImages);
+                viewPagerAdapter.setOnClick(ViewLargerImageActivity.this);
                 viewPager.setAdapter(viewPagerAdapter);
                 dotscount = viewPagerAdapter.getCount();
                 dots = new ImageView[dotscount];
@@ -831,5 +830,31 @@ public class ViewLargerImageActivity extends AppCompatActivity implements View.O
 
         sb.append("]");
         Log.d("Touch Events ---------", sb.toString());
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Dialog builder = new Dialog(ViewLargerImageActivity.this, android.R.style.Theme_Light);
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        builder.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                //nothing;
+            }
+        });
+
+        ImageView imageView = new ImageView(ViewLargerImageActivity.this);
+
+        imageView.setOnTouchListener(ViewLargerImageActivity.this);
+
+        Glide.with(ViewLargerImageActivity.this)
+                .load(portfolioImages.get(position).getImage())
+                .into(imageView);
+        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        builder.show();
     }
 }
